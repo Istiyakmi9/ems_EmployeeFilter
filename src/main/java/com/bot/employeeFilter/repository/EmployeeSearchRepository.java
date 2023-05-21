@@ -11,5 +11,8 @@ import java.util.List;
 @Repository
 public interface EmployeeSearchRepository extends JpaRepository<EmployeeBrief, Long> {
     @Query(value = "call SP_Employee_GetAll(:_SearchString, :_SortBy, :_PageIndex, :_PageSize)", nativeQuery = true)
-    List<EmployeeBrief> employeeByPagination(@Param(""));
+    List<EmployeeBrief> employeeByPagination(@Param("_SearchString") String searchString,
+                                             @Param("_SortBy") String sortBy,
+                                             @Param("_PageIndex") int pageIndex,
+                                             @Param("_PageSize") int pageSize);
 }

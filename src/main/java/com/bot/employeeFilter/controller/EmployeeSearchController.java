@@ -3,8 +3,8 @@ package com.bot.employeeFilter.controller;
 import com.bot.employeeFilter.entity.EmployeeBrief;
 import com.bot.employeeFilter.entity.FilterModel;
 import com.bot.employeeFilter.interfaces.EmployeeSearchInterface;
+import com.bot.employeeFilter.model.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +23,8 @@ public class EmployeeSearchController {
     }
 
     @RequestMapping(value = "pagination", method = RequestMethod.POST)
-    public ResponseEntity<List<EmployeeBrief>> getPaginationData(FilterModel filtermodel) {
+    public ResponseEntity<ApiResponse> getPaginationData(@RequestBody FilterModel filtermodel) {
         var result = employeeSearchInterface.employeePageRecrod(filtermodel);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(ApiResponse.Ok(result));
     }
 }
