@@ -14,9 +14,9 @@ public class LeaveNotification {
     @Column(name = "LeaveRequestNotificationId")
     @JsonProperty("LeaveRequestNotificationId")
     Long leaveRequestNotificationId;
-    @Column(name = "LeaveRequestedId")
-    @JsonProperty("LeaveRequestedId")
-    Long leaveRequestedId;
+    @Column(name = "LeaveRequestId")
+    @JsonProperty("LeaveRequestId")
+    Long leaveRequestId;
     @Column(name = "UserMessage")
     @JsonProperty("UserMessage")
     String userMessage;
@@ -67,12 +67,12 @@ public class LeaveNotification {
         this.leaveRequestNotificationId = leaveRequestNotificationId;
     }
 
-    public Long getLeaveRequestedId() {
-        return leaveRequestedId;
+    public Long getLeaveRequestId() {
+        return leaveRequestId;
     }
 
-    public void setLeaveRequestedId(Long leaveRequestedId) {
-        this.leaveRequestedId = leaveRequestedId;
+    public void setLeaveRequestId(Long leaveRequestId) {
+        this.leaveRequestId = leaveRequestId;
     }
 
     public String getUserMessage() {
