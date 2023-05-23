@@ -35,23 +35,10 @@ public class EmployeeSearchService implements EmployeeSearchInterface {
     }
 
     public List<EmployeeBrief> employeePageRecrod(FilterModel filterModel) {
-        // List<EmployeeBrief> employees = employeeSearchRepository.findAll();
-
-        // List<EmployeeBrief> employees = employeeRepository.getEmployeePage(filterModel);
-        // List<EmployeeBrief> employees = employeeRepository.getEmployeeAndSalaryGroup(filterModel);
-
-        List<DbParameters> dbParameters = new ArrayList<>();
-        dbParameters.add(new DbParameters("_CompanyId", 1, Types.INTEGER));
-        Map<String, Object> result = lowLevelExecution.executeProcedure("sp_salary_group_and_components_get", dbParameters);
-
-
-/*        List<Object> items = (List<Object>) result.get("#result-set-1");
-        List<SalaryGroup> salaryGroups = new ArrayList<>();
-        for(Object obj : items) {
-            salaryGroups.add((SalaryGroup) obj);
+        if(filterModel.serachString == null || filterModel.serachString.isEmpty()) {
+            filterModel.serachString = "1=1";
         }
 
-        List<SalaryComponents> salaryComponents = Arrays.asList((SalaryComponents[]) result.get("#result-set-2"));*/
-        return null;
+        return employeeRepository.getEmployeePage(filterModel);
     }
 }
