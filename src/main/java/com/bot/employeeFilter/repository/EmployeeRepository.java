@@ -26,10 +26,10 @@ public class EmployeeRepository {
         try {
             StoredProcedureQuery query = this.entityManager.createNamedStoredProcedureQuery("get_Employee_ByFilter");
 
-            query.setParameter("_SearchString", "1=1");
-            query.setParameter("_SortBy", "");
-            query.setParameter("_PageIndex", 1);
-            query.setParameter("_PageSize", 10);
+            query.setParameter("_SearchString", filterModel.serachString);
+            query.setParameter("_SortBy", filterModel.sortBy);
+            query.setParameter("_PageIndex", filterModel.pageIndex);
+            query.setParameter("_PageSize", filterModel.pageSize);
 
             employees = (List<EmployeeBrief>) query.getResultList();
             this.entityManager.close();
