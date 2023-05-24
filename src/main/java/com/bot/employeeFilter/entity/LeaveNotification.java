@@ -59,6 +59,18 @@ public class LeaveNotification {
     @JsonProperty("LastName")
     String lastName;
 
+    public String getLeaveQuotaDetail() {
+        return leaveQuotaDetail;
+    }
+
+    public void setLeaveQuotaDetail(String leaveQuotaDetail) {
+        this.leaveQuotaDetail = leaveQuotaDetail;
+    }
+
+    @Transient
+    @JsonProperty("LeaveQuotaDetail")
+    String leaveQuotaDetail;
+
     public Long getLeaveRequestNotificationId() {
         return leaveRequestNotificationId;
     }
@@ -178,4 +190,5 @@ public class LeaveNotification {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
 }
