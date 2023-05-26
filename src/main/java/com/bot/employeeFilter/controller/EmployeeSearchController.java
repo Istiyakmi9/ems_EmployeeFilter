@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/filter/")
+@RequestMapping("/api/ef/filter/")
 public class EmployeeSearchController {
     @Autowired
     EmployeeSearchInterface employeeSearchInterface;
