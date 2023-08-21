@@ -1,28 +1,23 @@
-package com.bot.employeeFilter.repository;
+package com.bot.employeeFilter.db.utils;
 
 import com.bot.employeeFilter.model.DbParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Component;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Types;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.List;
 
 @Component
 public class LowLevelExecution {
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    Template template;
 
     public <T> Map<String, Object> executeProcedure(String procedureName, List<DbParameters> sqlParams) {
+        JdbcTemplate jdbcTemplate = template.getTemplate();
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName(procedureName);
 

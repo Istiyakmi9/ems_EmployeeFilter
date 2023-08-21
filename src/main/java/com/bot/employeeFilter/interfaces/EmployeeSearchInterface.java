@@ -8,5 +8,5 @@ import java.util.List;
 public interface EmployeeSearchInterface {
     List<EmployeeBrief> employeePageRecrod(FilterModel filterModel);
 
-    List<EmployeeBrief> getAllEmployee();
+    List<EmployeeBrief> getAllEmployee() throws Exception;
 }

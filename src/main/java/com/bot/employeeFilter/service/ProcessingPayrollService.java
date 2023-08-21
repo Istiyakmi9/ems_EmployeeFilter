@@ -1,32 +1,26 @@
 package com.bot.employeeFilter.service;
 
-import com.bot.employeeFilter.entity.Attendance;
 import com.bot.employeeFilter.entity.Leave;
-import com.bot.employeeFilter.entity.LeaveNotification;
-import com.bot.employeeFilter.entity.LeavePlanType;
 import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
 import com.bot.employeeFilter.model.ApplicationConstant;
 import com.bot.employeeFilter.model.CompleteLeaveDetail;
-import com.bot.employeeFilter.model.DbParameters;
 import com.bot.employeeFilter.model.LeaveTypeBrief;
-import com.bot.employeeFilter.repository.LowLevelExecution;
+import com.bot.employeeFilter.repository.ProcessingPayrollRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class ProcessingPayrollService implements IProcessingPayrollService {
     @Autowired
-    LowLevelExecution lowLevelExecution;
-    @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    ProcessingPayrollRepository processingPayrollRepository;
     @Override
     public List<?> getLeaveAndLOPService(int year, int month) throws Exception {
         if (year == 0)
@@ -35,14 +29,7 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         if (month == 0)
             throw new Exception("Invalid month selected. Please select a valid month");
 
-        List<DbParameters> dbParameters = new ArrayList<>();
-        dbParameters.add(new DbParameters("_Year", year, Types.INTEGER));
-        dbParameters.add(new DbParameters("_Month", month, Types.INTEGER));
-        var dataSet = lowLevelExecution.executeProcedure("sp_leave_and_lop_get", dbParameters);
-        var result = new ArrayList<>();
-        result.add(objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<LeaveNotification>>() {}));
-        result.add(objectMapper.convertValue(dataSet.get("#result-set-2"), new TypeReference<List<Attendance>>() {}));
-        return  result;
+        return  processingPayrollRepository.getLeaveAndLOPRepository(year, month);
     }
 
     public String leaveApprovalService(Leave requestDetail) throws Exception {
@@ -54,10 +41,7 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         if (requestDetail.getLeaveRequestNotificationId() == 0)
             throw new Exception("Invalid request. Please check your detail first.");
 
-        List<DbParameters> dbParameters = new ArrayList<>();
-        dbParameters.add(new DbParameters("_LeaveRequestNotificationId", requestDetail.getLeaveRequestNotificationId(), Types.BIGINT));
-        var dataSet = lowLevelExecution.executeProcedure("sp_employee_leave_request_GetById", dbParameters);
-        List<Leave> leaveRequested = objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<Leave>>() {});
+        List<Leave> leaveRequested = processingPayrollRepository.getEmployeeLeaveRequestRepository(requestDetail.getLeaveRequestNotificationId());
         var leaveRequestDetail = leaveRequested.get(0);
         if (leaveRequestDetail == null || leaveRequestDetail.getLeaveDetail().isEmpty())
             throw new Exception("Unable to find leave detail. Please contact to admin.");
@@ -65,6 +49,7 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         List<CompleteLeaveDetail> completeLeaveDetails = objectMapper.convertValue(leaveRequestDetail.getLeaveDetail(), new TypeReference<List<CompleteLeaveDetail>>() {});
         if (completeLeaveDetails.isEmpty())
             throw new Exception("Unable to find applied leave detail. Please contact to admin");
+
         var pendingCount = completeLeaveDetails.stream().filter(x -> !x.getRecordId().equals(requestDetail.getRecordId())).
                 filter(i -> i.getLeaveStatus() == ApplicationConstant.Pending).toList().size();
         var singleLeaveDetail = completeLeaveDetails.stream().filter(x -> x.getRecordId().equals(requestDetail.getRecordId())).findFirst().get();
@@ -84,28 +69,8 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
 
         singleLeaveDetail.setRespondedBy(1L);
         leaveRequestDetail.setLeaveDetail(objectMapper.writeValueAsString(completeLeaveDetails));
-        List<DbParameters> dbParams = new ArrayList<>();
-        dbParams.add(new DbParameters("_LeaveRequestId", leaveRequestDetail.getLeaveRequestId(), Types.BIGINT));
-        dbParams.add(new DbParameters("_EmployeeId", leaveRequestDetail.getEmployeeId(), Types.BIGINT));
-        dbParams.add(new DbParameters("_LeaveDetail", leaveRequestDetail.getLeaveDetail(), Types.VARCHAR));
-        dbParams.add(new DbParameters("_Reason", leaveRequestDetail.getReason(), Types.VARCHAR));
-        dbParams.add(new DbParameters("_AssigneeId", leaveRequestDetail.getAssigneeId(), Types.BIGINT));
-        dbParams.add(new DbParameters("_ReportingManagerId", leaveRequestDetail.getReportingManagerId(), Types.BIGINT));
-        dbParams.add(new DbParameters("_Year", leaveRequestDetail.getYear(), Types.INTEGER));
-        dbParams.add(new DbParameters("_LeaveFromDay", leaveRequestDetail.getLeaveFromDay(), Types.DATE));
-        dbParams.add(new DbParameters("_LeaveToDay", leaveRequestDetail.getLeaveToDay(), Types.DATE));
-        dbParams.add(new DbParameters("_LeaveTypeId", leaveRequestDetail.getLeaveTypeId(), Types.INTEGER));
-        dbParams.add(new DbParameters("_RequestStatusId", leaveRequestDetail.getRequestStatusId(), Types.BIGINT));
-        dbParams.add(new DbParameters("_AvailableLeaves", leaveRequestDetail.getAvailableLeaves(), Types.BIGINT));
-        dbParams.add(new DbParameters("_TotalLeaveApplied", leaveRequestDetail.getTotalLeaveApplied(), Types.BIGINT));
-        dbParams.add(new DbParameters("_TotalLeaveQuota", leaveRequestDetail.getTotalLeaveQuota(), Types.BIGINT));
-        dbParams.add(new DbParameters("_NumOfDays", 0, Types.INTEGER));
-        dbParams.add(new DbParameters("_LeaveRequestNotificationId", leaveRequestDetail.getLeaveRequestNotificationId(), Types.BIGINT));
-        dbParams.add(new DbParameters("_RecordId", leaveRequestDetail.getRecordId(), Types.BIGINT));
-        dbParams.add(new DbParameters("_IsPending", pendingCount > 0 ? true : false, Types.BIT));
-
-        var message = lowLevelExecution.executeProcedure("sp_leave_notification_and_request_InsUpdate", dbParams);
-        return  null;
+        processingPayrollRepository.updateLeaveDetailRepository(leaveRequestDetail, pendingCount);
+        return null;
     }
 
     private void updateLeaveCountOnRejected(Leave LeaveRequestDetail, int leaveTypeId, Long leaveCount) throws Exception {

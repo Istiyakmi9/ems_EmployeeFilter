@@ -1,7 +1,6 @@
 package com.bot.employeeFilter.controller;
 
 import com.bot.employeeFilter.entity.Leave;
-import com.bot.employeeFilter.entity.LeaveNotification;
 import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
 import com.bot.employeeFilter.model.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;

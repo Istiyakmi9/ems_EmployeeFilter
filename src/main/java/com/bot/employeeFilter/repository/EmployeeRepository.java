@@ -1,63 +1,40 @@
 package com.bot.employeeFilter.repository;
 
+import com.bot.employeeFilter.db.utils.LowLevelExecution;
 import com.bot.employeeFilter.entity.EmployeeBrief;
 import com.bot.employeeFilter.entity.FilterModel;
-import jakarta.persistence.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.annotation.Persistent;
+import com.bot.employeeFilter.model.DbParameters;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Persistent
 public class EmployeeRepository {
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    LowLevelExecution lowLevelExecution;
+    @Autowired
+    ObjectMapper objectMapper;
+    public List<EmployeeBrief> getEmployeePage(FilterModel filter) {
+        List<DbParameters> dbParameters = new ArrayList<>();
+        dbParameters.add(new DbParameters("_SortBy", filter.getSortBy(), Types.VARCHAR));
+        dbParameters.add(new DbParameters("_PageIndex", filter.getPageIndex(), Types.INTEGER));
+        dbParameters.add(new DbParameters("_pageSize", filter.getPageSize(), Types.INTEGER));
+        dbParameters.add(new DbParameters("_SearchString", filter.getSerachString(), Types.VARCHAR));
 
-    private final Logger _logger = LoggerFactory.getLogger(EmployeeRepository.class);
-
-    public List<EmployeeBrief> getEmployeePage(FilterModel filterModel) {
-        List<EmployeeBrief> employees = new ArrayList<>();
-
-        try {
-            StoredProcedureQuery query = this.entityManager.createNamedStoredProcedureQuery("get_Employee_ByFilter");
-
-            query.setParameter("_SearchString", filterModel.serachString);
-            query.setParameter("_SortBy", filterModel.sortBy);
-            query.setParameter("_PageIndex", filterModel.pageIndex);
-            query.setParameter("_PageSize", filterModel.pageSize);
-
-            employees = (List<EmployeeBrief>) query.getResultList();
-            this.entityManager.close();
-        } catch (Exception ex) {
-            _logger.error(ex.getMessage());
-            throw ex;
-        }
-
-        return employees;
+        var dataSet = lowLevelExecution.executeProcedure("sp_objective_catagory_filter", dbParameters);
+        return objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<EmployeeBrief>>() { });
     }
 
     public List<EmployeeBrief> getEmployeeAndSalaryGroup(FilterModel filterModel) {
-        List<EmployeeBrief> employees = new ArrayList<>();
+        List<DbParameters> dbParameters = new ArrayList<>();
+        dbParameters.add(new DbParameters("_CompanyId", 1, Types.INTEGER));
 
-        try {
-            StoredProcedureQuery query = this.entityManager.createStoredProcedureQuery("sp_salary_group_and_components_get")
-                            .registerStoredProcedureParameter("_CompanyId", Integer.class, ParameterMode.IN);
-
-            query.setParameter("_CompanyId", 1);
-
-            var resultList = query.getResultList();
-
-            this.entityManager.close();
-        } catch (Exception ex) {
-            _logger.error(ex.getMessage());
-            throw ex;
-        }
-
-        return employees;
+        var dataSet = lowLevelExecution.executeProcedure("sp_objective_catagory_filter", dbParameters);
+        return objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<EmployeeBrief>>() { });
     }
 }
