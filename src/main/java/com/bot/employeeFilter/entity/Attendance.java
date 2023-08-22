@@ -1,12 +1,10 @@
 package com.bot.employeeFilter.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
+import com.bot.employeeFilter.db.annotations.Column;
+import com.bot.employeeFilter.db.annotations.Id;
+import com.bot.employeeFilter.db.annotations.Table;
 
-@Entity
 @Data
 @Table(name = "attendance")
 public class Attendance {

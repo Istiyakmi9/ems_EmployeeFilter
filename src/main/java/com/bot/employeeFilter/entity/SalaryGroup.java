@@ -1,11 +1,8 @@
 package com.bot.employeeFilter.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
-
-@Entity
+import com.bot.employeeFilter.db.annotations.Id;
+import com.bot.employeeFilter.db.annotations.Table;
 @Data
 @Table(name = "salary_group")
 public class SalaryGroup {

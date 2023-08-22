@@ -1,14 +1,11 @@
 package com.bot.employeeFilter.entity;
 
+import com.bot.employeeFilter.db.annotations.Column;
+import com.bot.employeeFilter.db.annotations.Id;
+import com.bot.employeeFilter.db.annotations.Table;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
-@Entity
 @Table(name = "leave_plans_type")
-
 public class LeavePlanType {
     @Id
     @Column(name = "LeavePlanTypeId")

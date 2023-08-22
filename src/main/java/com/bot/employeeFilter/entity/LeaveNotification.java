@@ -1,13 +1,14 @@
 package com.bot.employeeFilter.entity;
 
+import com.bot.employeeFilter.db.annotations.Column;
+import com.bot.employeeFilter.db.annotations.Id;
+import com.bot.employeeFilter.db.annotations.Table;
+import com.bot.employeeFilter.db.annotations.Transient;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import lombok.Data;
 
 import java.util.Date;
 
-@Entity
 @Table(name = "leave_request_notification")
 public class LeaveNotification {
     @Id
