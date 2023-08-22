@@ -4,6 +4,7 @@ import com.bot.employeeFilter.db.annotations.Column;
 import com.bot.employeeFilter.db.annotations.Id;
 import com.bot.employeeFilter.db.annotations.Table;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -11,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
+@RequestScope
 public class DbUtils {
     public <T> String save(T instance) throws Exception {
         String tableName = getTableName(instance);

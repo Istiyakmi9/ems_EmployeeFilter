@@ -1,5 +1,6 @@
 package com.bot.employeeFilter.db.service;
 
+import com.bot.employeeFilter.db.utils.DatabaseConfiguration;
 import com.bot.employeeFilter.db.utils.Template;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,25 +8,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 
 @Component
+@RequestScope
 public class DbManager {
-
     @Autowired
     DbUtils dbUtils;
-
     @Autowired
     ObjectMapper mapper;
-
+    @Autowired
+    DatabaseConfiguration databaseConfiguration;
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    DbManager(Template template) {
-        jdbcTemplate = template.getTemplate();
+    @PostConstruct
+    private void setUpJdbc() {
+        Template template = new Template();
+        jdbcTemplate = template.getTemplate(databaseConfiguration);
     }
+
 
     public <T> void save(T instance) throws Exception {
         String query = dbUtils.save(instance);
