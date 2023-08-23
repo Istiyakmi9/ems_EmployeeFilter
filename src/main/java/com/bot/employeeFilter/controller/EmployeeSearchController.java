@@ -26,7 +26,7 @@ public class EmployeeSearchController {
     }
 
     @RequestMapping(value = "pagination", method = RequestMethod.POST)
-    public ResponseEntity<ApiResponse> getPaginationData(@RequestBody FilterModel filtermodel) {
+    public ResponseEntity<ApiResponse> getPaginationData(@RequestBody FilterModel filtermodel) throws Exception {
         var result = employeeSearchInterface.employeePageRecrod(filtermodel);
         return ResponseEntity.ok(ApiResponse.Ok(result));
     }
