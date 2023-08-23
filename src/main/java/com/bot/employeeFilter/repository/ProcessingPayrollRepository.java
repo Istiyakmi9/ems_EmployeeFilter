@@ -32,14 +32,14 @@ public class ProcessingPayrollRepository {
         return  result;
     }
 
-    public List<Leave> getEmployeeLeaveRequestRepository(long leaveRequestNotificationId) {
+    public List<Leave> getEmployeeLeaveRequestRepository(long leaveRequestNotificationId) throws Exception {
         List<DbParameters> dbParameters = new ArrayList<>();
         dbParameters.add(new DbParameters("_LeaveRequestNotificationId", leaveRequestNotificationId, Types.BIGINT));
         var dataSet = lowLevelExecution.executeProcedure("sp_employee_leave_request_GetById", dbParameters);
         return objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<Leave>>() {});
     }
 
-    public void updateLeaveDetailRepository(Leave leaveRequestDetail, int pendingCount) {
+    public void updateLeaveDetailRepository(Leave leaveRequestDetail, int pendingCount) throws Exception {
         List<DbParameters> dbParams = new ArrayList<>();
         dbParams.add(new DbParameters("_LeaveRequestId", leaveRequestDetail.getLeaveRequestId(), Types.BIGINT));
         dbParams.add(new DbParameters("_EmployeeId", leaveRequestDetail.getEmployeeId(), Types.BIGINT));

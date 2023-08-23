@@ -19,7 +19,7 @@ public class EmployeeRepository {
     LowLevelExecution lowLevelExecution;
     @Autowired
     ObjectMapper objectMapper;
-    public List<EmployeeBrief> getEmployeePage(FilterModel filter) {
+    public List<EmployeeBrief> getEmployeePage(FilterModel filter) throws Exception {
         List<DbParameters> dbParameters = new ArrayList<>();
         dbParameters.add(new DbParameters("_SortBy", filter.getSortBy(), Types.VARCHAR));
         dbParameters.add(new DbParameters("_PageIndex", filter.getPageIndex(), Types.INTEGER));
@@ -30,7 +30,7 @@ public class EmployeeRepository {
         return objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<EmployeeBrief>>() { });
     }
 
-    public List<EmployeeBrief> getEmployeeAndSalaryGroup(FilterModel filterModel) {
+    public List<EmployeeBrief> getEmployeeAndSalaryGroup(FilterModel filterModel) throws Exception {
         List<DbParameters> dbParameters = new ArrayList<>();
         dbParameters.add(new DbParameters("_CompanyId", 1, Types.INTEGER));
 
