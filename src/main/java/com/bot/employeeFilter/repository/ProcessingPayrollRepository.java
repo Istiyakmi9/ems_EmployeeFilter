@@ -75,7 +75,7 @@ public class ProcessingPayrollRepository {
         dbParams.add(new DbParameters("_PageSize", filterModel.getPageSize(), Types.INTEGER));
 
         Map<String, Object> result = lowLevelExecution.executeProcedure("sp_attendance_get_by_page_yearmonth", dbParams);
-        List<Attendance> attendances = objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<Attendance>>() { });
+        List<Attendance> attendances = objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<Attendance>>() {});
 
         Optional.ofNullable(attendances).orElseThrow(() -> new RuntimeException("Fail to get attendance detail. Please contact to admin"));
         return attendances;
