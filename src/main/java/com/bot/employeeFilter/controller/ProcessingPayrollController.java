@@ -1,5 +1,6 @@
 package com.bot.employeeFilter.controller;
 
+import com.bot.employeeFilter.entity.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
 import com.bot.employeeFilter.model.ApiResponse;
@@ -21,6 +22,12 @@ public class ProcessingPayrollController {
     @PostMapping("leaveApproval")
     public ResponseEntity<ApiResponse> leaveApproval(@RequestBody Leave requestDetail) throws Exception {
         var result = iProcessingPayrollService.leaveApprovalService(requestDetail);
+        return  ResponseEntity.ok(ApiResponse.Ok(result));
+    }
+
+    @RequestMapping(value = "getAttendancePage", method = RequestMethod.POST)
+    public ResponseEntity<ApiResponse> getAttendancePage(@RequestBody FilterModel filterModel) throws Exception {
+        var result = iProcessingPayrollService.getAttendanceByPage(filterModel);
         return  ResponseEntity.ok(ApiResponse.Ok(result));
     }
 }

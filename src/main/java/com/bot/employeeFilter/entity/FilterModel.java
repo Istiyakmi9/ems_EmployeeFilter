@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @Data
 public class FilterModel {
-    @JsonProperty("SerachString")
-    public String serachString;
+    @JsonProperty("SearchString")
+    public String searchString;
     @JsonProperty("PageIndex")
     public int pageIndex;
     @JsonProperty("SortBy")

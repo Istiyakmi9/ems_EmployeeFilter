@@ -1,5 +1,7 @@
 package com.bot.employeeFilter.service;
 
+import com.bot.employeeFilter.entity.Attendance;
+import com.bot.employeeFilter.entity.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
 import com.bot.employeeFilter.model.ApplicationConstant;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -30,6 +34,14 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
             throw new Exception("Invalid month selected. Please select a valid month");
 
         return  processingPayrollRepository.getLeaveAndLOPRepository(year, month);
+    }
+
+    public List<Attendance> getAttendanceByPage(FilterModel filterModel) throws Exception {
+        if (filterModel.getSearchString() == null || filterModel.getSearchString().isEmpty()) {
+            filterModel.setSearchString("1=1");
+        }
+
+        return processingPayrollRepository.getAttendanceByPageRepository(filterModel);
     }
 
     public String leaveApprovalService(Leave requestDetail) throws Exception {

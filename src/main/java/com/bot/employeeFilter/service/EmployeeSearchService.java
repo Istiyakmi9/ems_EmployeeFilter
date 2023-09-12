@@ -22,8 +22,8 @@ public class EmployeeSearchService implements EmployeeSearchInterface {
     }
 
     public List<EmployeeBrief> employeePageRecrod(FilterModel filterModel) throws Exception {
-        if(filterModel.serachString == null || filterModel.serachString.isEmpty())
-            filterModel.serachString = "1=1";
+        if(filterModel.getSearchString() == null || filterModel.getSearchString().isEmpty())
+            filterModel.setSearchString("1=1");
 
         return employeeRepository.getEmployeePage(filterModel);
     }

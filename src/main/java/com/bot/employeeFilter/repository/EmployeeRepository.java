@@ -24,7 +24,7 @@ public class EmployeeRepository {
         dbParameters.add(new DbParameters("_SortBy", filter.getSortBy(), Types.VARCHAR));
         dbParameters.add(new DbParameters("_PageIndex", filter.getPageIndex(), Types.INTEGER));
         dbParameters.add(new DbParameters("_pageSize", filter.getPageSize(), Types.INTEGER));
-        dbParameters.add(new DbParameters("_SearchString", filter.getSerachString(), Types.VARCHAR));
+        dbParameters.add(new DbParameters("_SearchString", filter.getSearchString(), Types.VARCHAR));
 
         var dataSet = lowLevelExecution.executeProcedure("sp_objective_catagory_filter", dbParameters);
         return objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<EmployeeBrief>>() { });

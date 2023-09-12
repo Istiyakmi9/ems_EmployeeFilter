@@ -2,6 +2,7 @@ package com.bot.employeeFilter.repository;
 
 import com.bot.employeeFilter.db.utils.LowLevelExecution;
 import com.bot.employeeFilter.entity.Attendance;
+import com.bot.employeeFilter.entity.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.entity.LeaveNotification;
 import com.bot.employeeFilter.model.DbParameters;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class ProcessingPayrollRepository {
@@ -27,6 +30,7 @@ public class ProcessingPayrollRepository {
         dbParameters.add(new DbParameters("_Month", month, Types.INTEGER));
         var dataSet = lowLevelExecution.executeProcedure("sp_leave_and_lop_get", dbParameters);
         var result = new ArrayList<>();
+
         result.add(objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<LeaveNotification>>() {}));
         result.add(objectMapper.convertValue(dataSet.get("#result-set-2"), new TypeReference<List<Attendance>>() {}));
         return  result;
@@ -61,6 +65,20 @@ public class ProcessingPayrollRepository {
         dbParams.add(new DbParameters("_IsPending", pendingCount > 0 ? true : false, Types.BIT));
 
         lowLevelExecution.executeProcedure("sp_leave_notification_and_request_InsUpdate", dbParams);
+    }
+
+    public List<Attendance> getAttendanceByPageRepository(FilterModel filterModel) throws Exception {
+        List<DbParameters> dbParams = new ArrayList<>();
+        dbParams.add(new DbParameters("_SearchString", filterModel.getSearchString(), Types.VARCHAR));
+        dbParams.add(new DbParameters("_SortBy", filterModel.getSortBy(), Types.VARCHAR));
+        dbParams.add(new DbParameters("_PageIndex", filterModel.getPageIndex(), Types.INTEGER));
+        dbParams.add(new DbParameters("_PageSize", filterModel.getPageSize(), Types.INTEGER));
+
+        Map<String, Object> result = lowLevelExecution.executeProcedure("sp_attendance_get_by_page_yearmonth", dbParams);
+        List<Attendance> attendances = objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<Attendance>>() { });
+
+        Optional.ofNullable(attendances).orElseThrow(() -> new RuntimeException("Fail to get attendance detail. Please contact to admin"));
+        return attendances;
     }
 }
 
