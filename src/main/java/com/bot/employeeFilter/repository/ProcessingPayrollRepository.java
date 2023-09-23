@@ -45,17 +45,14 @@ public class ProcessingPayrollRepository {
         });
     }
 
-    public Optional<List<PayrollMonthlyDetail>> getPayrollProcessingDetailRepository(int year, int month) throws Exception {
+    public Optional<List<PayrollMonthlyDetail>> getPayrollProcessingDetailRepository(int year, int companyId) throws Exception {
 
         if (year != LocalDateTime.now().getYear())
             throw new Exception("Invalid year passed");
 
-        if (month <= 0 || month > 12)
-            throw new Exception("Invalid month passed");
-
         List<DbParameters> dbParameters = new ArrayList<>();
         dbParameters.add(new DbParameters("_ForYear", year, Types.INTEGER));
-        dbParameters.add(new DbParameters("_CompanyId", month, Types.INTEGER));
+        dbParameters.add(new DbParameters("_CompanyId", companyId, Types.INTEGER));
         var dataSet = lowLevelExecution.executeProcedure("sp_payroll_monthly_detail_get_processed_data", dbParameters);
         return Optional.of(objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<PayrollMonthlyDetail>>() {
         }));

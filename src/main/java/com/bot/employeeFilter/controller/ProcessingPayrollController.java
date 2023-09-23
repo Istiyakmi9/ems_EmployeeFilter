@@ -25,9 +25,9 @@ public class ProcessingPayrollController {
         return  ResponseEntity.ok(ApiResponse.Ok(result));
     }
 
-    @RequestMapping(value = "getPayrollProcessingDetail/{year}/{month}", method = RequestMethod.GET)
-    public ResponseEntity<ApiResponse> getPayrollProcessingDetail(@PathVariable int year, @PathVariable int month) throws Exception {
-        var result = iProcessingPayrollService.getPayrollProcessingDetailService(year, month);
+    @RequestMapping(value = "getPayrollProcessingDetail/{year}", method = RequestMethod.GET)
+    public ResponseEntity<ApiResponse> getPayrollProcessingDetail(@PathVariable int year) throws Exception {
+        var result = iProcessingPayrollService.getPayrollProcessingDetailService(year);
         return  ResponseEntity.ok(ApiResponse.Ok(result));
     }
 
