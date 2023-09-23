@@ -6,16 +6,15 @@ import com.bot.employeeFilter.entity.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.entity.LeaveNotification;
 import com.bot.employeeFilter.model.DbParameters;
+import com.bot.employeeFilter.model.PayrollMonthlyDetail;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Repository
 public class ProcessingPayrollRepository {
@@ -31,16 +30,35 @@ public class ProcessingPayrollRepository {
         var dataSet = lowLevelExecution.executeProcedure("sp_leave_and_lop_get", dbParameters);
         var result = new ArrayList<>();
 
-        result.add(objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<LeaveNotification>>() {}));
-        result.add(objectMapper.convertValue(dataSet.get("#result-set-2"), new TypeReference<List<Attendance>>() {}));
-        return  result;
+        result.add(objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<LeaveNotification>>() {
+        }));
+        result.add(objectMapper.convertValue(dataSet.get("#result-set-2"), new TypeReference<List<Attendance>>() {
+        }));
+        return result;
     }
 
     public List<Leave> getEmployeeLeaveRequestRepository(long leaveRequestNotificationId) throws Exception {
         List<DbParameters> dbParameters = new ArrayList<>();
         dbParameters.add(new DbParameters("_LeaveRequestNotificationId", leaveRequestNotificationId, Types.BIGINT));
         var dataSet = lowLevelExecution.executeProcedure("sp_employee_leave_request_GetById", dbParameters);
-        return objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<Leave>>() {});
+        return objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<Leave>>() {
+        });
+    }
+
+    public Optional<List<PayrollMonthlyDetail>> getPayrollProcessingDetailRepository(int year, int month) throws Exception {
+
+        if (year != LocalDateTime.now().getYear())
+            throw new Exception("Invalid year passed");
+
+        if (month <= 0 || month > 12)
+            throw new Exception("Invalid month passed");
+
+        List<DbParameters> dbParameters = new ArrayList<>();
+        dbParameters.add(new DbParameters("_ForYear", year, Types.INTEGER));
+        dbParameters.add(new DbParameters("_CompanyId", month, Types.INTEGER));
+        var dataSet = lowLevelExecution.executeProcedure("sp_payroll_monthly_detail_get_processed_data", dbParameters);
+        return Optional.of(objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<PayrollMonthlyDetail>>() {
+        }));
     }
 
     public void updateLeaveDetailRepository(Leave leaveRequestDetail, int pendingCount) throws Exception {
@@ -75,7 +93,8 @@ public class ProcessingPayrollRepository {
         dbParams.add(new DbParameters("_PageSize", filterModel.getPageSize(), Types.INTEGER));
 
         Map<String, Object> result = lowLevelExecution.executeProcedure("sp_attendance_get_by_page_yearmonth", dbParams);
-        List<Attendance> attendances = objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<Attendance>>() {});
+        List<Attendance> attendances = objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<Attendance>>() {
+        });
 
         Optional.ofNullable(attendances).orElseThrow(() -> new RuntimeException("Fail to get attendance detail. Please contact to admin"));
         return attendances;

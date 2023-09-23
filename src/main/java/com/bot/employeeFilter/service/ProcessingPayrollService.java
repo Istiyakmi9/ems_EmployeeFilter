@@ -7,6 +7,7 @@ import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
 import com.bot.employeeFilter.model.ApplicationConstant;
 import com.bot.employeeFilter.model.CompleteLeaveDetail;
 import com.bot.employeeFilter.model.LeaveTypeBrief;
+import com.bot.employeeFilter.model.PayrollMonthlyDetail;
 import com.bot.employeeFilter.repository.ProcessingPayrollRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,6 +47,12 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
 
     public String leaveApprovalService(Leave requestDetail) throws Exception {
         return updateLeaveDetail(requestDetail, ApplicationConstant.Approved);
+    }
+
+    public List<PayrollMonthlyDetail> getPayrollProcessingDetailService(int year, int month) throws Exception {
+        Optional<List<PayrollMonthlyDetail>> payrollMonthlyDetail = processingPayrollRepository.getPayrollProcessingDetailRepository(year, month);
+        payrollMonthlyDetail.orElseThrow(() -> new RuntimeException("No record found"));
+        return payrollMonthlyDetail.get();
     }
 
     @Transactional
