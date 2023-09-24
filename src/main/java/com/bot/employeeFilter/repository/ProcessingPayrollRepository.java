@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.*;
 
 @Repository
@@ -29,9 +32,20 @@ public class ProcessingPayrollRepository {
         dbParameters.add(new DbParameters("_Month", month, Types.INTEGER));
         var dataSet = lowLevelExecution.executeProcedure("sp_leave_and_lop_get", dbParameters);
         var result = new ArrayList<>();
-
-        result.add(objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<LeaveNotification>>() {
-        }));
+        List<LeaveNotification> leaves = objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<LeaveNotification>>() {});
+        if (leaves.size() > 0) {
+            int enddate =  YearMonth.of(year, month-1).atEndOfMonth().getDayOfMonth();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");
+            String date = year +"-"+ enddate + "-" + (month-1);
+            Date startDate = formatter.parse(date);
+            date = year +"-"+ 1 + "-" + (month+1);
+            Date endDate = formatter.parse(date);
+            leaves = leaves.stream().filter(x -> (x.getFromDate().after(startDate) && x.getToDate().before(endDate))
+                    || (x.getToDate().after(startDate) && x.getToDate().before(endDate))
+                    || (x.getFromDate().before(endDate) && x.getToDate().after(endDate))
+            ).toList();
+        }
+        result.add(leaves);
         result.add(objectMapper.convertValue(dataSet.get("#result-set-2"), new TypeReference<List<Attendance>>() {
         }));
         return result;
@@ -45,17 +59,14 @@ public class ProcessingPayrollRepository {
         });
     }
 
-    public Optional<List<PayrollMonthlyDetail>> getPayrollProcessingDetailRepository(int year, int month) throws Exception {
+    public Optional<List<PayrollMonthlyDetail>> getPayrollProcessingDetailRepository(int year, int companyId) throws Exception {
 
         if (year != LocalDateTime.now().getYear())
             throw new Exception("Invalid year passed");
 
-        if (month <= 0 || month > 12)
-            throw new Exception("Invalid month passed");
-
         List<DbParameters> dbParameters = new ArrayList<>();
         dbParameters.add(new DbParameters("_ForYear", year, Types.INTEGER));
-        dbParameters.add(new DbParameters("_CompanyId", month, Types.INTEGER));
+        dbParameters.add(new DbParameters("_CompanyId", companyId, Types.INTEGER));
         var dataSet = lowLevelExecution.executeProcedure("sp_payroll_monthly_detail_get_processed_data", dbParameters);
         return Optional.of(objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<PayrollMonthlyDetail>>() {
         }));
@@ -81,6 +92,7 @@ public class ProcessingPayrollRepository {
         dbParams.add(new DbParameters("_LeaveRequestNotificationId", leaveRequestDetail.getLeaveRequestNotificationId(), Types.BIGINT));
         dbParams.add(new DbParameters("_RecordId", leaveRequestDetail.getRecordId(), Types.BIGINT));
         dbParams.add(new DbParameters("_IsPending", pendingCount > 0 ? true : false, Types.BIT));
+        dbParams.add(new DbParameters("_FeedBackMessage", leaveRequestDetail.getReason(), Types.VARCHAR));
 
         lowLevelExecution.executeProcedure("sp_leave_notification_and_request_InsUpdate", dbParams);
     }

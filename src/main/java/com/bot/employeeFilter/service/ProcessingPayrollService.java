@@ -4,10 +4,7 @@ import com.bot.employeeFilter.entity.Attendance;
 import com.bot.employeeFilter.entity.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
-import com.bot.employeeFilter.model.ApplicationConstant;
-import com.bot.employeeFilter.model.CompleteLeaveDetail;
-import com.bot.employeeFilter.model.LeaveTypeBrief;
-import com.bot.employeeFilter.model.PayrollMonthlyDetail;
+import com.bot.employeeFilter.model.*;
 import com.bot.employeeFilter.repository.ProcessingPayrollRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +23,8 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
     ObjectMapper objectMapper;
     @Autowired
     ProcessingPayrollRepository processingPayrollRepository;
+    @Autowired
+    CurrentSession currentSession;
     @Override
     public List<?> getLeaveAndLOPService(int year, int month) throws Exception {
         if (year == 0)
@@ -49,8 +48,8 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         return updateLeaveDetail(requestDetail, ApplicationConstant.Approved);
     }
 
-    public List<PayrollMonthlyDetail> getPayrollProcessingDetailService(int year, int month) throws Exception {
-        Optional<List<PayrollMonthlyDetail>> payrollMonthlyDetail = processingPayrollRepository.getPayrollProcessingDetailRepository(year, month);
+    public List<PayrollMonthlyDetail> getPayrollProcessingDetailService(int year) throws Exception {
+        Optional<List<PayrollMonthlyDetail>> payrollMonthlyDetail = processingPayrollRepository.getPayrollProcessingDetailRepository(year, currentSession.getUserDetail().getCompanyId());
         payrollMonthlyDetail.orElseThrow(() -> new RuntimeException("No record found"));
         return payrollMonthlyDetail.get();
     }
