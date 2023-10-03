@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +32,7 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         if (month == 0)
             throw new Exception("Invalid month selected. Please select a valid month");
 
-        return  processingPayrollRepository.getLeaveAndLOPRepository(year, month);
+        return  processingPayrollRepository.getLeaveAndLOPRepository(year, month, currentSession.getUserDetail().getCompanyId());
     }
 
     public List<Attendance> getAttendanceByPage(FilterModel filterModel) throws Exception {
