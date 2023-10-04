@@ -5,6 +5,7 @@ import com.bot.employeeFilter.entity.Attendance;
 import com.bot.employeeFilter.entity.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.entity.LeaveNotification;
+import com.bot.employeeFilter.model.ApplicationConstant;
 import com.bot.employeeFilter.model.DbParameters;
 import com.bot.employeeFilter.model.PayrollMonthlyDetail;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProcessingPayrollRepository {
@@ -26,10 +28,11 @@ public class ProcessingPayrollRepository {
     @Autowired
     ObjectMapper objectMapper;
 
-    public List<?> getLeaveAndLOPRepository(int year, int month) throws Exception {
+    public List<?> getLeaveAndLOPRepository(int year, int month, int companyId) throws Exception {
         List<DbParameters> dbParameters = new ArrayList<>();
         dbParameters.add(new DbParameters("_Year", year, Types.INTEGER));
         dbParameters.add(new DbParameters("_Month", month, Types.INTEGER));
+        dbParameters.add(new DbParameters("_CompanyId", companyId, Types.INTEGER));
         var dataSet = lowLevelExecution.executeProcedure("sp_leave_and_lop_get", dbParameters);
         var result = new ArrayList<>();
         List<LeaveNotification> leaves = objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<LeaveNotification>>() {});
@@ -46,8 +49,7 @@ public class ProcessingPayrollRepository {
             ).toList();
         }
         result.add(leaves);
-        result.add(objectMapper.convertValue(dataSet.get("#result-set-2"), new TypeReference<List<Attendance>>() {
-        }));
+        result.add(objectMapper.convertValue(dataSet.get("#result-set-2"), new TypeReference<List<Attendance>>() {}));
         return result;
     }
 

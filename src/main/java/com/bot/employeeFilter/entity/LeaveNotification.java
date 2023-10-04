@@ -60,6 +60,13 @@ public class LeaveNotification {
     @JsonProperty("LastName")
     String lastName;
 
+    @Transient
+    @JsonProperty("IsOnLeave")
+    boolean isOnLeave;
+
+    @Transient
+    @JsonProperty("LeaveQuotaDetail")
+    String leaveQuotaDetail;
     public String getLeaveQuotaDetail() {
         return leaveQuotaDetail;
     }
@@ -68,9 +75,6 @@ public class LeaveNotification {
         this.leaveQuotaDetail = leaveQuotaDetail;
     }
 
-    @Transient
-    @JsonProperty("LeaveQuotaDetail")
-    String leaveQuotaDetail;
 
     public Long getLeaveRequestNotificationId() {
         return leaveRequestNotificationId;
@@ -192,4 +196,11 @@ public class LeaveNotification {
         this.lastName = lastName;
     }
 
+    public boolean isOnLeave() {
+        return isOnLeave;
+    }
+
+    public void setOnLeave(boolean onLeave) {
+        isOnLeave = onLeave;
+    }
 }
