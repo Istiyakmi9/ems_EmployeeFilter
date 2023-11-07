@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @RequestScope
@@ -133,6 +134,51 @@ public class DbUtils {
         var instance = type.getDeclaredConstructor().newInstance();
         String tableName = getTableName(instance);
         return createSelectStatement(instance, tableName);
+    }
+
+    public <T> String getAllByIntKeys(List<Integer> keys, Class<T> type) throws Exception {
+        return getFinalGetAllIntQuery(keys, type);
+    }
+
+    public <T> String getAllByStringKeys(List<String> keys, Class<T> type) throws Exception {
+        return getFinalGetAllStringQuery(keys, type);
+    }
+
+    public <T> String getAll(String keys, Class<T> type) throws Exception {
+        return getFinalGetAllQuery(keys, type);
+    }
+
+    private <T> String getFinalGetAllIntQuery(List<Integer> keys, Class<T> type) throws Exception {
+        var instance = type.getDeclaredConstructor().newInstance();
+        String tableName = getTableName(instance);
+        String primaryKey = getPrimaryKey(instance);
+
+        String selectQuery = createSelectStatement(instance, tableName);
+        return selectQuery + " where " + primaryKey + " in (" + keys.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(", ")) + ")";
+    }
+
+    private <T> String getFinalGetAllStringQuery(List<String> keys, Class<T> type) throws Exception {
+        var instance = type.getDeclaredConstructor().newInstance();
+        String tableName = getTableName(instance);
+        String primaryKey = getPrimaryKey(instance);
+
+        String selectQuery = createSelectStatement(instance, tableName);
+
+        return selectQuery + " where " + primaryKey + " in (" + keys.stream()
+                .reduce((a, b) -> "'" + a + ", '" + b + "'")
+                .map(x -> x.substring(2, x.length() - 1))
+                .orElse("") + ")";
+    }
+
+    private <T> String getFinalGetAllQuery(String keys, Class<T> type) throws Exception {
+        var instance = type.getDeclaredConstructor().newInstance();
+        String tableName = getTableName(instance);
+        String primaryKey = getPrimaryKey(instance);
+
+        String selectQuery = createSelectStatement(instance, tableName);
+        return selectQuery + " where " + primaryKey + " in (" + keys + ")";
     }
 
     public <T> String getById(long id, Class<T> type) throws Exception {

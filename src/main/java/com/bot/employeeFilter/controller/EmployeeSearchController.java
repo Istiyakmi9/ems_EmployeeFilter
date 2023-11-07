@@ -4,12 +4,11 @@ import com.bot.employeeFilter.entity.EmployeeBrief;
 import com.bot.employeeFilter.entity.FilterModel;
 import com.bot.employeeFilter.interfaces.EmployeeSearchInterface;
 import com.bot.employeeFilter.model.ApiResponse;
+import com.bot.employeeFilter.model.OrgHierarchyModel;
+import jakarta.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +27,18 @@ public class EmployeeSearchController {
     @RequestMapping(value = "pagination", method = RequestMethod.POST)
     public ResponseEntity<ApiResponse> getPaginationData(@RequestBody FilterModel filtermodel) throws Exception {
         var result = employeeSearchInterface.employeePageRecrod(filtermodel);
+        return ResponseEntity.ok(ApiResponse.Ok(result));
+    }
+
+    @RequestMapping(value = "addOrganizationHierarchy", method = RequestMethod.POST)
+    public ResponseEntity<ApiResponse> addOrganizationHierarchy(@RequestBody List<OrgHierarchyModel> orgHierarchies) throws Exception {
+        var result = employeeSearchInterface.addOrganizationHierarchyService(orgHierarchies);
+        return ResponseEntity.ok(ApiResponse.Ok(result));
+    }
+
+    @RequestMapping(value = "getOrganizationHierarchy/{companyId}", method = RequestMethod.GET)
+    public ResponseEntity<ApiResponse> getOrganizationHierarchy(@PathVariable("companyId") int companyId) throws Exception {
+        var result = employeeSearchInterface.getOrganizationHierarchyService(companyId);
         return ResponseEntity.ok(ApiResponse.Ok(result));
     }
 }

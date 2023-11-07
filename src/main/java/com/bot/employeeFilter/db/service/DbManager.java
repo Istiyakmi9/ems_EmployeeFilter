@@ -75,6 +75,18 @@ public class DbManager {
         return mapper.convertValue(result, new TypeReference<List<T>>() {});
     }
 
+    public <T> List<T> getAllByIntKeys(List<Integer> keys, Class<T> type) throws Exception {
+        String query = dbUtils.getAllByIntKeys(keys, type);
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
+        return mapper.convertValue(result, new TypeReference<List<T>>() {});
+    }
+
+    public <T> List<T> getAllByStringKeys(List<String> keys, Class<T> type) throws Exception {
+        String query = dbUtils.getAllByStringKeys(keys, type);
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
+        return mapper.convertValue(result, new TypeReference<List<T>>() {});
+    }
+
     public <T> T getById(long id, Class<T> type) throws Exception {
         String query = dbUtils.getById(id, type);
         try {
