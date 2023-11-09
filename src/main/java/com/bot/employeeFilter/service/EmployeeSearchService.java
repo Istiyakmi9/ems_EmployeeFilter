@@ -9,9 +9,11 @@ import com.bot.employeeFilter.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class EmployeeSearchService implements EmployeeSearchInterface {
@@ -40,14 +42,23 @@ public class EmployeeSearchService implements EmployeeSearchInterface {
                     .boxed()
                     .toList();
 
-            var hierarchyData = dbManager.getAllByIntKeys(nodeIds, OrgHierarchyModel.class);
-            if (!hierarchyData.isEmpty()) {
-                hierarchyData = hierarchyData.stream()
-                        .map(i -> orgHierarchies.stream()
-                                .filter(x -> Objects.equals(x.getNode(), i.getNode()))
-                                .findFirst()
-                                .orElse(i)
-                        ).toList();
+            var result = dbManager.getAllByIntKeys(nodeIds, OrgHierarchyModel.class);
+            List<OrgHierarchyModel> hierarchyData = new ArrayList<>();
+
+            if (!result.isEmpty()) {
+                for (var data : result) {
+                    var item = orgHierarchies.stream()
+                            .filter(x -> x.getNode().equals(data.getNode()))
+                            .findFirst()
+                            .orElse(data);
+
+                    hierarchyData.add(item);
+                }
+
+                hierarchyData = Stream.concat(hierarchyData.stream(), (orgHierarchies.stream()
+                        .filter(x -> result.stream()
+                                .noneMatch(i -> i.getNode().equals(x.getNode())))
+                        .toList()).stream()).toList();
             } else {
                 hierarchyData = orgHierarchies;
             }

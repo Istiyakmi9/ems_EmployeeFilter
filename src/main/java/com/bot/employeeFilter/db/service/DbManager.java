@@ -2,8 +2,11 @@ package com.bot.employeeFilter.db.service;
 
 import com.bot.employeeFilter.db.utils.DatabaseConfiguration;
 import com.bot.employeeFilter.db.utils.Template;
+import com.bot.employeeFilter.db.utils.TypeConverter;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jose4j.json.internal.json_simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +27,7 @@ public class DbManager {
     @Autowired
     ObjectMapper mapper;
     private JdbcTemplate jdbcTemplate;
+
     @Autowired
     DbManager(DatabaseConfiguration databaseConfiguration) {
         Template template = new Template();
@@ -72,19 +77,22 @@ public class DbManager {
     public <T> List<T> get(Class<T> type) throws Exception {
         String query = dbUtils.get(type);
         List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
-        return mapper.convertValue(result, new TypeReference<List<T>>() {});
+        return mapper.convertValue(result, new TypeReference<List<T>>() {
+        });
     }
 
     public <T> List<T> getAllByIntKeys(List<Integer> keys, Class<T> type) throws Exception {
         String query = dbUtils.getAllByIntKeys(keys, type);
         List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
-        return mapper.convertValue(result, new TypeReference<List<T>>() {});
+        var converter = new TypeConverter<T>(type);
+        return converter.convert(result);
     }
 
     public <T> List<T> getAllByStringKeys(List<String> keys, Class<T> type) throws Exception {
         String query = dbUtils.getAllByStringKeys(keys, type);
         List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
-        return mapper.convertValue(result, new TypeReference<List<T>>() {});
+        return mapper.convertValue(result, new TypeReference<List<T>>() {
+        });
     }
 
     public <T> T getById(long id, Class<T> type) throws Exception {
@@ -112,9 +120,10 @@ public class DbManager {
         return mapper.convertValue(result, type);
     }
 
-    public <T> List<T> queryList(String query, Class<T> type) {
+    public <T> List<T> queryList(String query, Class<T> type) throws Exception {
         List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
-        return mapper.convertValue(result, new TypeReference<List<T>>() {});
+        var converter = new TypeConverter<T>(type);
+        return converter.convert(result);
     }
 
     public void execute(String query) {

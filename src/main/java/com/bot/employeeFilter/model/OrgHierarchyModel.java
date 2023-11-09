@@ -9,6 +9,19 @@ import lombok.Data;
 @Data
 @Table(name = "org_hierarchy")
 public class OrgHierarchyModel {
+    public OrgHierarchyModel() {
+    }
+
+    public OrgHierarchyModel(Integer node, Integer parentNode, String name, String email, String imageUrl, String companyId, boolean isActive) {
+        this.node = node;
+        this.parentNode = parentNode;
+        this.name = name;
+        this.email = email;
+        this.imageUrl = imageUrl;
+        this.companyId = companyId;
+        this.isActive = isActive;
+    }
+
     @JsonProperty("Node")
     @Column(name = "Node")
     @Id
