@@ -2,7 +2,7 @@ package com.bot.employeeFilter.repository;
 
 import com.bot.employeeFilter.db.utils.LowLevelExecution;
 import com.bot.employeeFilter.entity.EmployeeBrief;
-import com.bot.employeeFilter.entity.FilterModel;
+import com.bot.employeeFilter.model.FilterModel;
 import com.bot.employeeFilter.model.DbParameters;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

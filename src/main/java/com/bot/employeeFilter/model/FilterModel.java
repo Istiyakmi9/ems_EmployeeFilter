@@ -1,4 +1,4 @@
-package com.bot.employeeFilter.entity;
+package com.bot.employeeFilter.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -17,4 +17,6 @@ public class FilterModel {
     public String sortBy;
     @JsonProperty("PageSize")
     public int pageSize;
+    @JsonProperty("CompanyId")
+    public int companyId;
 }

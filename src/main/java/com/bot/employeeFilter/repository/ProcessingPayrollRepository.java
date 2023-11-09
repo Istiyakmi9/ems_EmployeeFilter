@@ -2,10 +2,9 @@ package com.bot.employeeFilter.repository;
 
 import com.bot.employeeFilter.db.utils.LowLevelExecution;
 import com.bot.employeeFilter.entity.Attendance;
-import com.bot.employeeFilter.entity.FilterModel;
+import com.bot.employeeFilter.model.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.entity.LeaveNotification;
-import com.bot.employeeFilter.model.ApplicationConstant;
 import com.bot.employeeFilter.model.DbParameters;
 import com.bot.employeeFilter.model.PayrollMonthlyDetail;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -15,11 +14,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Types;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Repository
 public class ProcessingPayrollRepository {

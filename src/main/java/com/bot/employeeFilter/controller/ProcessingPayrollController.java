@@ -1,6 +1,6 @@
 package com.bot.employeeFilter.controller;
 
-import com.bot.employeeFilter.entity.FilterModel;
+import com.bot.employeeFilter.model.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
 import com.bot.employeeFilter.model.ApiResponse;
