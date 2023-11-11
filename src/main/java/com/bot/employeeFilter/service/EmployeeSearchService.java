@@ -45,7 +45,7 @@ public class EmployeeSearchService implements EmployeeSearchInterface {
         try {
 
             List<Integer> nodeIds = orgHierarchies.stream()
-                    .mapToInt(OrgHierarchyModel::getNode)
+                    .mapToInt(OrgHierarchyModel::getRoleId)
                     .boxed()
                     .toList();
 
@@ -55,7 +55,7 @@ public class EmployeeSearchService implements EmployeeSearchInterface {
             if (!result.isEmpty()) {
                 for (var data : result) {
                     var item = orgHierarchies.stream()
-                            .filter(x -> x.getNode().equals(data.getNode()))
+                            .filter(x -> x.getRoleId().equals(data.getRoleId()))
                             .findFirst()
                             .orElse(data);
 
@@ -64,7 +64,7 @@ public class EmployeeSearchService implements EmployeeSearchInterface {
 
                 hierarchyData = Stream.concat(hierarchyData.stream(), (orgHierarchies.stream()
                         .filter(x -> result.stream()
-                                .noneMatch(i -> i.getNode().equals(x.getNode())))
+                                .noneMatch(i -> i.getRoleId().equals(x.getRoleId())))
                         .toList()).stream()).toList();
             } else {
                 hierarchyData = orgHierarchies;

@@ -12,26 +12,26 @@ public class OrgHierarchyModel {
     public OrgHierarchyModel() {
     }
 
-    public OrgHierarchyModel(Integer node, Integer parentNode, String name, String email, String imageUrl, String companyId, boolean isActive) {
-        this.node = node;
+    public OrgHierarchyModel(Integer roleId, Integer parentNode, String roleName, String email, String imageUrl, String companyId, boolean isActive) {
+        this.roleId = roleId;
         this.parentNode = parentNode;
-        this.name = name;
+        this.roleName = roleName;
         this.email = email;
         this.imageUrl = imageUrl;
         this.companyId = companyId;
         this.isActive = isActive;
     }
 
-    @JsonProperty("Node")
-    @Column(name = "Node")
+    @JsonProperty("RoleId")
+    @Column(name = "RoleId")
     @Id
-    Integer node;
+    Integer roleId;
     @JsonProperty("ParentNode")
     @Column(name = "ParentNode")
     Integer parentNode;
-    @JsonProperty("Name")
-    @Column(name = "Name")
-    String name;
+    @JsonProperty("RoleName")
+    @Column(name = "RoleName")
+    String roleName;
     @JsonProperty("Email")
     @Column(name = "Email")
     String email;
