@@ -29,18 +29,6 @@ public class EmployeeSearchController {
         return ResponseEntity.ok(ApiResponse.Ok(result));
     }
 
-    @RequestMapping(value = "addOrganizationHierarchy", method = RequestMethod.POST)
-    public ResponseEntity<ApiResponse> addOrganizationHierarchy(@RequestBody List<OrgHierarchyModel> orgHierarchies) throws Exception {
-        var result = employeeSearchInterface.addOrganizationHierarchyService(orgHierarchies);
-        return ResponseEntity.ok(ApiResponse.Ok(result));
-    }
-
-    @RequestMapping(value = "getOrganizationHierarchy/{companyId}", method = RequestMethod.GET)
-    public ResponseEntity<ApiResponse> getOrganizationHierarchy(@PathVariable("companyId") int companyId) throws Exception {
-        var result = employeeSearchInterface.getOrganizationHierarchyService(companyId);
-        return ResponseEntity.ok(ApiResponse.Ok(result));
-    }
-
     @RequestMapping(value = "employeeFilterByName", method = RequestMethod.POST)
     public ResponseEntity<ApiResponse> employeeFilterByName(@RequestBody FilterModel filterModel) throws Exception {
         var result = employeeSearchInterface.employeeFilterByName(filterModel);
