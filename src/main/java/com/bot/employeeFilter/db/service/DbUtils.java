@@ -30,6 +30,7 @@ public class DbUtils {
 
         try {
             String delimiter = "";
+            String updateDelimiter = "";
             for (Map.Entry<String, Field> field : fields.entrySet()) {
                 field.getValue().setAccessible(true);
                 Object value = field.getValue().get(instance);
@@ -50,7 +51,8 @@ public class DbUtils {
 
                 columnsValue.append(delimiter + value);
                 if(!field.getKey().equals(primayKey)) {
-                    updateStatement.append(delimiter + field.getKey() + " = " + value);
+                    updateStatement.append(updateDelimiter + field.getKey() + " = " + value);
+                    updateDelimiter = ",";
                 }
 
                 delimiter = ",";
@@ -83,6 +85,7 @@ public class DbUtils {
             for (T instance : instances) {
                 columnsValue.append(rowDelimiter + "(");
                 delimiter = "";
+                String updateDelimiter = "";
 
                 for (Map.Entry<String, Field> field : fields.entrySet()) {
                     field.getValue().setAccessible(true);
@@ -105,7 +108,8 @@ public class DbUtils {
                     if (i == 0) {
                         columnsName.append(delimiter + field.getKey());
                         if(!field.getKey().equals(primayKey)) {
-                            updateStatement.append(delimiter + field.getKey() + " = VALUES(" + field.getKey() + ")");
+                            updateStatement.append(updateDelimiter + field.getKey() + " = VALUES(" + field.getKey() + ")");
+                            updateDelimiter = ",";
                         }
                     }
 
