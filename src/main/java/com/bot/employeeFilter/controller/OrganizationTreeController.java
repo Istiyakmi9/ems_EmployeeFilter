@@ -1,6 +1,5 @@
 package com.bot.employeeFilter.controller;
 
-import com.bot.employeeFilter.interfaces.EmployeeSearchInterface;
 import com.bot.employeeFilter.interfaces.IOrganizationTreeService;
 import com.bot.employeeFilter.model.ApiResponse;
 import com.bot.employeeFilter.model.OrgHierarchyModel;
