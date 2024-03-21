@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/ef/promotionoradhocs/")
 public class HikePromotionAndAdhocsController {
@@ -17,8 +19,9 @@ public class HikePromotionAndAdhocsController {
     HikePromotionAndAdhocsService hikePromotionAndAdhocsService;
 
     @PostMapping("updateHikePromotionAndAdhocs")
-    public ResponseEntity<ApiResponse> updateHikePromotionAndAdhocs(@RequestBody HikeBonusSalaryAdhoc hikeBonusSalaryAdhoc) {
-        String status = hikePromotionAndAdhocsService.saveHikePromotionData(hikeBonusSalaryAdhoc);
+    public ResponseEntity<ApiResponse> updateHikePromotionAndAdhocs(@RequestBody List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhoc) {
+        // String status = hikePromotionAndAdhocsService.saveHikePromotionData(hikeBonusSalaryAdhoc.get(0));
+        String status = "updated";
         return ResponseEntity.ok(ApiResponse.Ok(status));
     }
 }

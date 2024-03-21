@@ -3,11 +3,14 @@ package com.bot.employeeFilter.entity;
 import com.bot.employeeFilter.db.annotations.Column;
 import com.bot.employeeFilter.db.annotations.Id;
 import com.bot.employeeFilter.db.annotations.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import java.util.Date;
 
 @Table(name = "hike_bonus_salary_adhoc")
+@Data
 public class HikeBonusSalaryAdhoc {
     @Id
     @Column(name = "SalaryAdhocId")
@@ -60,21 +63,26 @@ public class HikeBonusSalaryAdhoc {
     long approvedBy;
     @Column(name = "StartDate")
     @JsonProperty("StartDate")
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     Date startDate;
     @Column(name = "EndDate")
     @JsonProperty("EndDate")
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     Date endDate;
     @Column(name = "IsActive")
     @JsonProperty("IsActive")
     boolean isActive;
     @Column(name = "DOJ")
     @JsonProperty("DOJ")
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     Date dOJ;
     @Column(name = "LWD")
     @JsonProperty("LWD")
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     Date lWD;
     @Column(name = "DOR")
     @JsonProperty("DOR")
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     Date dOR;
     @Column(name = "NoOfDays")
     @JsonProperty("NoOfDays")
