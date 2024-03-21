@@ -1,6 +1,7 @@
 package com.bot.employeeFilter.service;
 
 import com.bot.employeeFilter.entity.Attendance;
+import com.bot.employeeFilter.entity.EmployeeBrief;
 import com.bot.employeeFilter.model.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
@@ -41,6 +42,11 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         }
 
         return processingPayrollRepository.getAttendanceByPageRepository(filterModel);
+    }
+
+    public List<Employee> getJoineeAndExitingEmployeesService() throws Exception {
+
+        return processingPayrollRepository.getJoineeAndExitingEmployeesRepository(currentSession.getUserDetail().getCompanyId());
     }
 
     public String leaveApprovalService(Leave requestDetail) throws Exception {

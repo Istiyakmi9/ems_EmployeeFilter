@@ -1,6 +1,8 @@
 package com.bot.employeeFilter.interfaces;
 
 import com.bot.employeeFilter.entity.Attendance;
+import com.bot.employeeFilter.entity.EmployeeBrief;
+import com.bot.employeeFilter.model.Employee;
 import com.bot.employeeFilter.model.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.model.PayrollMonthlyDetail;
@@ -12,4 +14,6 @@ public interface IProcessingPayrollService {
     String leaveApprovalService(Leave requestDetail) throws Exception;
     List<PayrollMonthlyDetail> getPayrollProcessingDetailService(int year) throws Exception;
     List<Attendance> getAttendanceByPage(FilterModel filterModel) throws Exception;
+
+    List<Employee> getJoineeAndExitingEmployeesService() throws Exception;
 }
