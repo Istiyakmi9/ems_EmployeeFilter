@@ -1,6 +1,5 @@
 package com.bot.employeeFilter.service;
 
-import com.bot.employeeFilter.controller.OrganizationTreeController;
 import com.bot.employeeFilter.db.service.DbManager;
 import com.bot.employeeFilter.db.utils.LowLevelExecution;
 import com.bot.employeeFilter.interfaces.IOrganizationTreeService;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -81,12 +79,17 @@ public class OrganizationTreeService implements IOrganizationTreeService {
     }
 
     private List<OrgHierarchyModel> buildFilteredTree(List<OrgHierarchyModel> itemTree, List<OrgHierarchyModel> newTree, int roleId) throws Exception {
-        Optional<OrgHierarchyModel> item = itemTree.stream().filter(i -> i.getRoleId() == roleId).findFirst();
-        if (item.isPresent()) {
-            buildFilteredTree(itemTree, newTree, item.get().getParentNode());
-            newTree.add(item.get());
+        try {
+            Optional<OrgHierarchyModel> item = itemTree.stream().filter(i -> i.getRoleId() == roleId).findFirst();
+            if (item.isPresent()) {
+                buildFilteredTree(itemTree, newTree, item.get().getParentNode());
+                newTree.add(item.get());
+            }
+
+            return newTree;
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
         }
 
-        return newTree;
     }
 }

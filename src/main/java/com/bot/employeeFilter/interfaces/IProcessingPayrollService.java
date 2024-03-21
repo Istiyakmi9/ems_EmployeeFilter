@@ -13,7 +13,6 @@ public interface IProcessingPayrollService {
     List<?> getLeaveAndLOPService(int year, int month) throws Exception;
     String leaveApprovalService(Leave requestDetail) throws Exception;
     List<PayrollMonthlyDetail> getPayrollProcessingDetailService(int year) throws Exception;
-
     List<Attendance> getAttendanceByPage(FilterModel filterModel) throws Exception;
 
     List<Employee> getJoineeAndExitingEmployeesService() throws Exception;
