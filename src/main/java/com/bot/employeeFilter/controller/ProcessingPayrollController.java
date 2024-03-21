@@ -36,4 +36,10 @@ public class ProcessingPayrollController {
         var result = iProcessingPayrollService.getAttendanceByPage(filterModel);
         return  ResponseEntity.ok(ApiResponse.Ok(result));
     }
+
+    @RequestMapping(value = "getJoineeAndExitingEmployees", method = RequestMethod.GET)
+    public ResponseEntity<ApiResponse> getJoineeAndExitingEmployees() throws Exception {
+        var result = iProcessingPayrollService.getJoineeAndExitingEmployeesService();
+        return  ResponseEntity.ok(ApiResponse.Ok(result));
+    }
 }

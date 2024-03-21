@@ -1,6 +1,8 @@
 package com.bot.employeeFilter.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 public class ApiResponse {
@@ -16,7 +18,6 @@ public class ApiResponse {
     public ApiResponse(String token) {
         this.authenticationToken = token;
     }
-
     public ApiResponse() { }
 
     public static ApiResponse Ok(Object data) {

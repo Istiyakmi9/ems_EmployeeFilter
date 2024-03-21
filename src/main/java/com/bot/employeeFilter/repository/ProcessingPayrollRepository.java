@@ -2,6 +2,8 @@ package com.bot.employeeFilter.repository;
 
 import com.bot.employeeFilter.db.utils.LowLevelExecution;
 import com.bot.employeeFilter.entity.Attendance;
+import com.bot.employeeFilter.entity.EmployeeBrief;
+import com.bot.employeeFilter.model.Employee;
 import com.bot.employeeFilter.model.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.entity.LeaveNotification;
@@ -109,6 +111,17 @@ public class ProcessingPayrollRepository {
 
         Optional.ofNullable(attendances).orElseThrow(() -> new RuntimeException("Fail to get attendance detail. Please contact to admin"));
         return attendances;
+    }
+
+    public List<Employee> getJoineeAndExitingEmployeesRepository(int companyId) throws Exception {
+        List<DbParameters> dbParams = new ArrayList<>();
+        dbParams.add(new DbParameters("_CompanyId", companyId, Types.INTEGER));
+
+        Map<String, Object> result = lowLevelExecution.executeProcedure("sp_employee_get_newjoinee_exiting", dbParams);
+        List<Employee> employees = objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<Employee>>() {
+        });
+
+        return employees;
     }
 }
 
