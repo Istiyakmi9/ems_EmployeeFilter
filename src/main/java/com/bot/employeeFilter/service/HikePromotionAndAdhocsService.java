@@ -33,6 +33,9 @@ public class HikePromotionAndAdhocsService {
         });
         validateHikeBonusSalaryAdhoc(hikeBonusSalaryAdhocs);
         boolean flag = true;
+    public String saveHikePromotionData(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) {
+        boolean flag = hikePromotionAndAdhocsRepository.updateHikeBonusAdhocRepository(hikeBonusSalaryAdhocs);
+
         if(!flag) {
             return "fail";
         }

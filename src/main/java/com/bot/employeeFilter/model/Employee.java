@@ -34,4 +34,10 @@ public class Employee {
     int resignationStatus;
     @JsonProperty("Reason")
     String reason;
+    @JsonProperty("PaymentActionType")
+    String paymentActionType;
+    @JsonProperty("Comments")
+    String comments;
+    @JsonProperty("SalaryAdhocId")
+    long salaryAdhocId;
 }

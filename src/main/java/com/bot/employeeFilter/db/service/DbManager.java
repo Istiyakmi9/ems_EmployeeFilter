@@ -3,6 +3,8 @@ package com.bot.employeeFilter.db.service;
 import com.bot.employeeFilter.db.utils.DatabaseConfiguration;
 import com.bot.employeeFilter.db.utils.Template;
 import com.bot.employeeFilter.db.utils.TypeConverter;
+import com.bot.employeeFilter.db.utils.TypedParameter;
+import com.bot.employeeFilter.model.DbParameters;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,6 +44,14 @@ public class DbManager {
     public <T> void saveAll(List<T> instance, Class<T> type) throws Exception {
         String query = dbUtils.saveAll(instance, type);
         jdbcTemplate.execute(query);
+    }
+
+    public <T> List<DbParameters> getProcedureParameters(List<T> instance, Class<T> type) throws Exception {
+        return dbUtils.getProcedureParameters(instance, type);
+    }
+
+    public <T> List<TypedParameter> getParameters(T instance, Class<T> type) throws Exception {
+        return dbUtils.getParameters(instance, type);
     }
 
     public <T> int nextIntPrimaryKey(Class<T> instance) throws Exception {
