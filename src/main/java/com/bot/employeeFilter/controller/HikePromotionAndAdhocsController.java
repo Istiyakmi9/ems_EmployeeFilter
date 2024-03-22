@@ -19,9 +19,8 @@ public class HikePromotionAndAdhocsController {
     HikePromotionAndAdhocsService hikePromotionAndAdhocsService;
 
     @PostMapping("updateHikePromotionAndAdhocs")
-    public ResponseEntity<ApiResponse> updateHikePromotionAndAdhocs(@RequestBody List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhoc) {
-        // String status = hikePromotionAndAdhocsService.saveHikePromotionData(hikeBonusSalaryAdhoc.get(0));
-        String status = "updated";
+    public ResponseEntity<ApiResponse> updateHikePromotionAndAdhocs(@RequestBody List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhoc) throws Exception {
+        String status = hikePromotionAndAdhocsService.saveHikePromotionData(hikeBonusSalaryAdhoc);
         return ResponseEntity.ok(ApiResponse.Ok(status));
     }
 }
