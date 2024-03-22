@@ -5,12 +5,14 @@ import com.bot.employeeFilter.repository.HikePromotionAndAdhocsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HikePromotionAndAdhocsService {
     @Autowired
     HikePromotionAndAdhocsRepository hikePromotionAndAdhocsRepository;
-    public String saveHikePromotionData(HikeBonusSalaryAdhoc hikeBonusSalaryAdhoc) {
-        boolean flag = hikePromotionAndAdhocsRepository.save(hikeBonusSalaryAdhoc);
+    public String saveHikePromotionData(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) {
+        boolean flag = hikePromotionAndAdhocsRepository.updateHikeBonusAdhocRepository(hikeBonusSalaryAdhocs);
 
         if(!flag) {
             return "fail";

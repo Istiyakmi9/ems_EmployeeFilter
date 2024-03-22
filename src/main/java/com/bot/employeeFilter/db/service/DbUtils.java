@@ -3,10 +3,14 @@ package com.bot.employeeFilter.db.service;
 import com.bot.employeeFilter.db.annotations.Column;
 import com.bot.employeeFilter.db.annotations.Id;
 import com.bot.employeeFilter.db.annotations.Table;
+import com.bot.employeeFilter.db.utils.TypedParameter;
+import com.bot.employeeFilter.model.DbParameters;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.sql.Types;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -39,18 +43,18 @@ public class DbUtils {
                 columnsName.append(delimiter + field.getKey());
 
                 if (type == String.class) {
-                    if (value != null){
+                    if (value != null) {
                         value = "'" + value + "'";
                     }
                 } else if (type == Date.class) {
-                    if (value != null){
+                    if (value != null) {
                         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         value = "'" + formatter.format(value) + "'";
                     }
                 }
 
                 columnsValue.append(delimiter + value);
-                if(!field.getKey().equals(primayKey)) {
+                if (!field.getKey().equals(primayKey)) {
                     updateStatement.append(updateDelimiter + field.getKey() + " = " + value);
                     updateDelimiter = ",";
                 }
@@ -65,6 +69,83 @@ public class DbUtils {
         }
 
         return columnsName.toString() + columnsValue.toString() + updateStatement.toString();
+    }
+
+    public <T> List<DbParameters> getProcedureParameters(List<T> instances, Class<T> classType) throws Exception {
+        T instanceType = classType.getDeclaredConstructor().newInstance();
+        HashMap<String, Field> fields = getFields(instanceType);
+
+
+        List<DbParameters> parameters = new ArrayList<DbParameters>();
+
+        try {
+            for (T instance : instances) {
+                for (Map.Entry<String, Field> field : fields.entrySet()) {
+                    field.getValue().setAccessible(true);
+                    Object value = field.getValue().get(instance);
+                    Class<?> type = field.getValue().getType();
+
+                    if (type == String.class) {
+                        if (value != null && !value.toString().isEmpty()) {
+                            value = "'" + value + "'";
+                        }
+                    } else if (type == Date.class) {
+                        if (value != null) {
+                            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            value = "'" + formatter.format(value) + "'";
+                        }
+                    }
+
+                    parameters.add(new DbParameters("_" + field.getKey(), value, getFieldDbType(type)));
+                }
+            }
+        } catch (IllegalAccessException ex) {
+            throw new Exception(ex.getMessage());
+        }
+
+        return parameters;
+    }
+
+    public <T> List<TypedParameter> getParameters(T instance, Class<T> classType) throws Exception {
+        T instanceType = classType.getDeclaredConstructor().newInstance();
+        HashMap<String, Field> fields = getFields(instanceType);
+
+
+        List<TypedParameter> parameters = new ArrayList<TypedParameter>();
+
+        try {
+            for (Map.Entry<String, Field> field : fields.entrySet()) {
+                field.getValue().setAccessible(true);
+                Object value = field.getValue().get(instance);
+                Class<?> type = field.getValue().getType();
+
+                parameters.add(new TypedParameter(field.getKey(), value, getFieldDbType(type)));
+            }
+        } catch (IllegalAccessException ex) {
+            throw new Exception(ex.getMessage());
+        }
+
+        return parameters;
+    }
+
+    private int getFieldDbType(Class<?> type) {
+        int dbType = Types.VARCHAR;
+
+        if (type.equals(Integer.class) || type.equals(int.class)) {
+            dbType = Types.INTEGER;
+        } else if (type.equals(Double.class) || type.equals(double.class)) {
+            dbType = Types.DOUBLE;
+        } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
+            dbType = Types.BIT;
+        } else if (type.equals(Date.class)) {
+            dbType = Types.DATE;
+        } else if (type.equals(Long.class) || type.equals(long.class)) {
+            dbType = Types.BIGINT;
+        } else if (type.equals(Character.class) || type.equals(char.class)) {
+            dbType = Types.CHAR;
+        }
+
+        return dbType;
     }
 
     public <T> String saveAll(List<T> instances, Class<T> classType) throws Exception {
@@ -93,11 +174,11 @@ public class DbUtils {
                     Class<?> type = field.getValue().getType();
 
                     if (type == String.class) {
-                        if (value != null){
+                        if (value != null && !value.toString().isEmpty()) {
                             value = "'" + value + "'";
                         }
                     } else if (type == Date.class) {
-                        if (value != null){
+                        if (value != null) {
                             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             value = "'" + formatter.format(value) + "'";
                         }
@@ -107,7 +188,7 @@ public class DbUtils {
 
                     if (i == 0) {
                         columnsName.append(delimiter + field.getKey());
-                        if(!field.getKey().equals(primayKey)) {
+                        if (!field.getKey().equals(primayKey)) {
                             updateStatement.append(updateDelimiter + field.getKey() + " = VALUES(" + field.getKey() + ")");
                             updateDelimiter = ",";
                         }
@@ -204,7 +285,7 @@ public class DbUtils {
     public <T> String getPrimaryKey(T instance) throws Exception {
         String primaryKey = null;
         Field[] fields = instance.getClass().getDeclaredFields();
-        for(Field field : fields) {
+        for (Field field : fields) {
             if (field.isAnnotationPresent(Id.class) && field.isAnnotationPresent(Column.class)) {
                 Column column = (Column) field.getAnnotation(Column.class);
                 primaryKey = column.name();
@@ -212,7 +293,7 @@ public class DbUtils {
             }
         }
 
-        if(primaryKey == null) {
+        if (primaryKey == null) {
             throw new Exception("Modal does not have primary key declared.");
         }
 
@@ -223,13 +304,13 @@ public class DbUtils {
         String tableName = null;
         var annotations = instance.getClass().getAnnotations();
         for (var annotation : annotations) {
-            if(annotation.annotationType().equals(Table.class)) {
-                tableName = ((Table)annotation).name();
+            if (annotation.annotationType().equals(Table.class)) {
+                tableName = ((Table) annotation).name();
                 break;
             }
         }
 
-        if(tableName == null) {
+        if (tableName == null) {
             throw new Exception("Modal does not have table name declared.");
         }
 
