@@ -42,4 +42,10 @@ public class ProcessingPayrollController {
         var result = iProcessingPayrollService.getJoineeAndExitingEmployeesService();
         return  ResponseEntity.ok(ApiResponse.Ok(result));
     }
+
+    @RequestMapping(value = "getBonusShiftOT/{forMonth}/{forYear}", method = RequestMethod.GET)
+    public ResponseEntity<ApiResponse> getBonusShiftOT(@PathVariable int forMonth, @PathVariable int forYear) throws Exception {
+        var result = iProcessingPayrollService.getBonusShiftOTService(forMonth, forYear);
+        return  ResponseEntity.ok(ApiResponse.Ok(result));
+    }
 }

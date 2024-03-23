@@ -1,6 +1,7 @@
 package com.bot.employeeFilter.service;
 
 import com.bot.employeeFilter.entity.Attendance;
+import com.bot.employeeFilter.entity.BonusShiftOvertime;
 import com.bot.employeeFilter.entity.EmployeeBrief;
 import com.bot.employeeFilter.model.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
@@ -45,7 +46,6 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
     }
 
     public List<Employee> getJoineeAndExitingEmployeesService() throws Exception {
-
         return processingPayrollRepository.getJoineeAndExitingEmployeesRepository(currentSession.getUserDetail().getCompanyId());
     }
 
@@ -111,5 +111,9 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
                 LeaveRequestDetail.setLeaveQuotaDetail(objectMapper.writeValueAsString(records));
             }
         }
+    }
+
+    public List<BonusShiftOvertime> getBonusShiftOTService(int forMonth, int forYear) throws Exception {
+        return processingPayrollRepository.getBonusShiftOTRepository(currentSession.getUserDetail().getCompanyId(), forMonth, forYear);
     }
 }
