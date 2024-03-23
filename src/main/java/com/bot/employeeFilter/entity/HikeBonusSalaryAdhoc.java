@@ -52,60 +52,25 @@ public class HikeBonusSalaryAdhoc {
     @Column(name = "IsArrear")
     @JsonProperty("IsArrear")
     boolean isArrear;
-    @Column(name = "Description")
-    @JsonProperty("Description")
-    String description;
     @Column(name = "Amount")
     @JsonProperty("Amount")
     double amount;
-    @Column(name = "ApprovedBy")
-    @JsonProperty("ApprovedBy")
-    long approvedBy;
-    @Column(name = "StartDate")
-    @JsonProperty("StartDate")
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
-    Date startDate;
-    @Column(name = "EndDate")
-    @JsonProperty("EndDate")
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
-    Date endDate;
     @Column(name = "IsActive")
     @JsonProperty("IsActive")
     boolean isActive;
-    @Column(name = "DOJ")
-    @JsonProperty("DOJ")
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
-    Date dOJ;
-    @Column(name = "LWD")
-    @JsonProperty("LWD")
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
-    Date lWD;
-    @Column(name = "DOR")
-    @JsonProperty("DOR")
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
-    Date dOR;
-    @Column(name = "NoOfDays")
-    @JsonProperty("NoOfDays")
-    double noOfDays;
     @Column(name = "PaymentActionType")
     @JsonProperty("PaymentActionType")
     String paymentActionType;
-    @Column(name = "Reason")
-    @JsonProperty("Reason")
-    String reason;
     @Column(name = "Comments")
     @JsonProperty("Comments")
     String comments;
-    @Column(name = "Status")
-    @JsonProperty("Status")
-    int status;
     @Column(name = "ForYear")
     @JsonProperty("ForYear")
     int forYear;
     @Column(name = "ForMonth")
     @JsonProperty("ForMonth")
     int forMonth;
-    @Column(name = "WorkedMinutes")
-    @JsonProperty("WorkedMinutes")
-    double workedMinutes;
+    @Column(name = "Status")
+    @JsonProperty("Status")
+    int status;
 }

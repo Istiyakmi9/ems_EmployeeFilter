@@ -1,12 +1,9 @@
 package com.bot.employeeFilter.repository;
 
 import com.bot.employeeFilter.db.utils.LowLevelExecution;
-import com.bot.employeeFilter.entity.Attendance;
-import com.bot.employeeFilter.entity.EmployeeBrief;
+import com.bot.employeeFilter.entity.*;
 import com.bot.employeeFilter.model.Employee;
 import com.bot.employeeFilter.model.FilterModel;
-import com.bot.employeeFilter.entity.Leave;
-import com.bot.employeeFilter.entity.LeaveNotification;
 import com.bot.employeeFilter.model.DbParameters;
 import com.bot.employeeFilter.model.PayrollMonthlyDetail;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -122,6 +119,19 @@ public class ProcessingPayrollRepository {
         });
 
         return employees;
+    }
+
+    public List<BonusShiftOvertime> getBonusShiftOTRepository(int companyId, int forMonth, int forYear) throws Exception {
+        List<DbParameters> dbParams = new ArrayList<>();
+        dbParams.add(new DbParameters("_CompanyId", companyId, Types.INTEGER));
+        dbParams.add(new DbParameters("_ForMonth", forMonth, Types.INTEGER));
+        dbParams.add(new DbParameters("_ForYear", forYear, Types.INTEGER));
+
+        Map<String, Object> result = lowLevelExecution.executeProcedure("sp_employee_get_bonus_shift_overtime", dbParams);
+        List<BonusShiftOvertime> bonusShiftOvertimes = objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<BonusShiftOvertime>>() {
+        });
+
+        return bonusShiftOvertimes;
     }
 }
 

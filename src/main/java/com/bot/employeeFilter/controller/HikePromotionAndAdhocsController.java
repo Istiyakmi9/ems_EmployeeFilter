@@ -1,6 +1,8 @@
 package com.bot.employeeFilter.controller;
 
+import com.bot.employeeFilter.entity.BonusShiftOvertime;
 import com.bot.employeeFilter.entity.HikeBonusSalaryAdhoc;
+import com.bot.employeeFilter.interfaces.IHikePromotionAndAdhocsService;
 import com.bot.employeeFilter.model.ApiResponse;
 import com.bot.employeeFilter.service.HikePromotionAndAdhocsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +18,17 @@ import java.util.List;
 @RequestMapping("/api/ef/promotionoradhocs/")
 public class HikePromotionAndAdhocsController {
     @Autowired
-    HikePromotionAndAdhocsService hikePromotionAndAdhocsService;
+    IHikePromotionAndAdhocsService hikePromotionAndAdhocsService;
 
     @PostMapping("updateHikePromotionAndAdhocs")
-    public ResponseEntity<ApiResponse> updateHikePromotionAndAdhocs(@RequestBody List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhoc) {
+    public ResponseEntity<ApiResponse> updateHikePromotionAndAdhocs(@RequestBody List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhoc) throws Exception {
         String status = hikePromotionAndAdhocsService.saveHikePromotionData(hikeBonusSalaryAdhoc);
+        return ResponseEntity.ok(ApiResponse.Ok(status));
+    }
+
+    @PostMapping("manageBonusShiftOvertime")
+    public ResponseEntity<ApiResponse> manageBonusShiftOvertime(@RequestBody BonusShiftOvertime hikeBonusSalaryAdhoc) throws Exception {
+        String status = hikePromotionAndAdhocsService.manageBonusShiftOvertimeService(hikeBonusSalaryAdhoc);
         return ResponseEntity.ok(ApiResponse.Ok(status));
     }
 }
