@@ -44,7 +44,7 @@ public class HikePromotionAndAdhocsRepository {
         return true;
     }
 
-    public boolean anageBonusShiftOvertimeRepository(BonusShiftOvertime bonusShiftOvertime) {
+    public boolean manageBonusShiftOvertimeRepository(BonusShiftOvertime bonusShiftOvertime) {
         try {
             List<TypedParameter> parameters = dbManager.getParameters(bonusShiftOvertime, BonusShiftOvertime.class);
             List<DbParameters> params = new ArrayList<>();

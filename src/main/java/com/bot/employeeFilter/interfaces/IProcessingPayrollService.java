@@ -1,11 +1,8 @@
 package com.bot.employeeFilter.interfaces;
 
-import com.bot.employeeFilter.entity.Attendance;
-import com.bot.employeeFilter.entity.BonusShiftOvertime;
-import com.bot.employeeFilter.entity.EmployeeBrief;
+import com.bot.employeeFilter.entity.*;
 import com.bot.employeeFilter.model.Employee;
 import com.bot.employeeFilter.model.FilterModel;
-import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.model.PayrollMonthlyDetail;
 
 import java.util.List;
@@ -17,4 +14,5 @@ public interface IProcessingPayrollService {
     List<Attendance> getAttendanceByPage(FilterModel filterModel) throws Exception;
     List<Employee> getJoineeAndExitingEmployeesService() throws Exception;
     List<BonusShiftOvertime> getBonusShiftOTService(int forMonth, int forYear) throws Exception;
+    List<ReimbursementAdhocDeduction> getReimbursementAdhocDeductionService(int forMonth, int forYear) throws Exception;
 }

@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Table(name = "bonus_shift_overtime")
@@ -57,7 +56,7 @@ public class BonusShiftOvertime {
 
     @Column(name = "Amount")
     @JsonProperty("Amount")
-    private BigDecimal amount;
+    private double amount;
 
     @Column(name = "Comments")
     @JsonProperty("Comments")
@@ -96,4 +95,24 @@ public class BonusShiftOvertime {
     @Transient
     @JsonProperty("PaymentActionType")
     private String paymentActionType;
+
+    @Transient
+    @JsonProperty("CompleteSalaryDetail")
+    private String completeSalaryDetail;
+
+    @Transient
+    @JsonProperty("PayCalculationId")
+    private int payCalculationId;
+
+    @Transient
+    @JsonProperty("OTCalculatedOn")
+    private String oTCalculatedOn;
+
+    @Transient
+    @JsonProperty("IsCompOff")
+    private boolean isCompOff;
+
+    @Transient
+    @JsonProperty("SalaryAdhocId")
+    private long salaryAdhocId;
 }

@@ -48,4 +48,10 @@ public class ProcessingPayrollController {
         var result = iProcessingPayrollService.getBonusShiftOTService(forMonth, forYear);
         return  ResponseEntity.ok(ApiResponse.Ok(result));
     }
+
+    @RequestMapping(value = "getReimbursementAdhocDeduction/{forMonth}/{forYear}", method = RequestMethod.GET)
+    public ResponseEntity<ApiResponse> getReimbursementAdhocDeduction(@PathVariable int forMonth, @PathVariable int forYear) throws Exception {
+        var result = iProcessingPayrollService.getReimbursementAdhocDeductionService(forMonth, forYear);
+        return  ResponseEntity.ok(ApiResponse.Ok(result));
+    }
 }

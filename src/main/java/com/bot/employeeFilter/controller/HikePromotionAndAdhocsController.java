@@ -26,9 +26,27 @@ public class HikePromotionAndAdhocsController {
         return ResponseEntity.ok(ApiResponse.Ok(status));
     }
 
-    @PostMapping("manageBonusShiftOvertime")
-    public ResponseEntity<ApiResponse> manageBonusShiftOvertime(@RequestBody BonusShiftOvertime hikeBonusSalaryAdhoc) throws Exception {
-        String status = hikePromotionAndAdhocsService.manageBonusShiftOvertimeService(hikeBonusSalaryAdhoc);
+    @PostMapping("manageBonus")
+    public ResponseEntity<ApiResponse> manageBonus(@RequestBody BonusShiftOvertime hikeBonusSalaryAdhoc) throws Exception {
+        String status = hikePromotionAndAdhocsService.manageBonusService(hikeBonusSalaryAdhoc);
+        return ResponseEntity.ok(ApiResponse.Ok(status));
+    }
+
+    @PostMapping("manageNewJoineeExitsFinalSattlement")
+    public ResponseEntity<ApiResponse> manageNewJoineeExitsFinalSattlement(@RequestBody List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhoc) throws Exception {
+        String status = hikePromotionAndAdhocsService.manageNewJoineeExitsFinalSattlementService(hikeBonusSalaryAdhoc);
+        return ResponseEntity.ok(ApiResponse.Ok(status));
+    }
+
+    @PostMapping("manageBonusSalaryRevisionOvertime")
+    public ResponseEntity<ApiResponse> manageBonusSalaryRevisionOvertime(@RequestBody List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhoc) throws Exception {
+        String status = hikePromotionAndAdhocsService.saveHikePromotionData(hikeBonusSalaryAdhoc);
+        return ResponseEntity.ok(ApiResponse.Ok(status));
+    }
+
+    @PostMapping("manageReimbursementAdhocPaymentDeduction")
+    public ResponseEntity<ApiResponse> manageReimbursementAdhocPaymentDeduction(@RequestBody List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhoc) throws Exception {
+        String status = hikePromotionAndAdhocsService.saveHikePromotionData(hikeBonusSalaryAdhoc);
         return ResponseEntity.ok(ApiResponse.Ok(status));
     }
 }
