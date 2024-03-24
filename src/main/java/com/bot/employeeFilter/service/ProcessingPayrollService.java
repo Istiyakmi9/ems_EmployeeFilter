@@ -1,10 +1,7 @@
 package com.bot.employeeFilter.service;
 
-import com.bot.employeeFilter.entity.Attendance;
-import com.bot.employeeFilter.entity.BonusShiftOvertime;
-import com.bot.employeeFilter.entity.EmployeeBrief;
+import com.bot.employeeFilter.entity.*;
 import com.bot.employeeFilter.model.FilterModel;
-import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
 import com.bot.employeeFilter.model.*;
 import com.bot.employeeFilter.repository.ProcessingPayrollRepository;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -114,6 +112,12 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
     }
 
     public List<BonusShiftOvertime> getBonusShiftOTService(int forMonth, int forYear) throws Exception {
-        return processingPayrollRepository.getBonusShiftOTRepository(currentSession.getUserDetail().getCompanyId(), forMonth, forYear);
+        return processingPayrollRepository.getBonusShiftOTRepository(currentSession.getUserDetail().getCompanyId(),
+                                                                        forMonth, forYear);
+    }
+
+    public List<ReimbursementAdhocDeduction> getReimbursementAdhocDeductionService(int forMonth, int forYear) throws Exception {
+        return processingPayrollRepository.getReimbursementAdhocDeductionRepository(currentSession.getUserDetail().getCompanyId(),
+                                                                                    forMonth, forYear);
     }
 }

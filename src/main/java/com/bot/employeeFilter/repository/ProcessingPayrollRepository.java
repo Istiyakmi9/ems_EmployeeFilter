@@ -133,5 +133,48 @@ public class ProcessingPayrollRepository {
 
         return bonusShiftOvertimes;
     }
+
+    public List<ReimbursementAdhocDeduction> getReimbursementAdhocDeductionRepository(int companyId, int forMonth,
+                                                                                      int forYear) throws Exception {
+        List<DbParameters> dbParams = new ArrayList<>();
+        dbParams.add(new DbParameters("_CompanyId", companyId, Types.INTEGER));
+        dbParams.add(new DbParameters("_ForMonth", forMonth, Types.INTEGER));
+        dbParams.add(new DbParameters("_ForYear", forYear, Types.INTEGER));
+
+        Map<String, Object> result = lowLevelExecution.executeProcedure("sp_employee_get_reimburs_adhoc_and_deduction", dbParams);
+        List<ReimbursementAdhocDeduction> reimbursementAdhocDeductions = objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<ReimbursementAdhocDeduction>>() {
+        });
+
+        return reimbursementAdhocDeductions;
+    }
+
+    public Leave getEmployeeLeaveRequestRepository(long employeeId, int year) throws Exception {
+        List<DbParameters> dbParams = new ArrayList<>();
+        dbParams.add(new DbParameters("_EmployeeId", employeeId, Types.BIGINT));
+        dbParams.add(new DbParameters("_Year", year, Types.INTEGER));
+
+        Map<String, Object> result = lowLevelExecution.executeProcedure("sp_employee_leave_request_by_empid", dbParams);
+        List<Leave> leaves = objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<Leave>>() {
+        });
+        if (leaves.size() == 1)
+            return leaves.get(0);
+        else
+            return null;
+    }
+
+    public void updateEmployeeLeaveRequestRepository(Leave leaveRequestDetail) throws Exception {
+        List<DbParameters> dbParams = new ArrayList<>();
+        dbParams.add(new DbParameters("_LeaveRequestId", leaveRequestDetail.getLeaveRequestId(), Types.BIGINT));
+        dbParams.add(new DbParameters("_EmployeeId", leaveRequestDetail.getEmployeeId(), Types.BIGINT));
+        dbParams.add(new DbParameters("_LeaveDetail", leaveRequestDetail.getLeaveDetail(), Types.VARCHAR));
+        dbParams.add(new DbParameters("_Year", leaveRequestDetail.getYear(), Types.INTEGER));
+        dbParams.add(new DbParameters("_IsPending", leaveRequestDetail.isPending(), Types.BIT));
+        dbParams.add(new DbParameters("_AvailableLeaves", leaveRequestDetail.getAvailableLeaves(), Types.BIGINT));
+        dbParams.add(new DbParameters("_TotalLeaveApplied", leaveRequestDetail.getTotalLeaveApplied(), Types.BIGINT));
+        dbParams.add(new DbParameters("_TotalLeaveQuota", leaveRequestDetail.getTotalLeaveQuota(), Types.BIGINT));
+        dbParams.add(new DbParameters("_LeaveQuotaDetail", leaveRequestDetail.getLeaveQuotaDetail(), Types.VARCHAR));
+
+        lowLevelExecution.executeProcedure("sp_employee_leave_request_InsUpdate", dbParams);
+    }
 }
 
