@@ -40,13 +40,13 @@ public class HikePromotionAndAdhocsController {
 
     @PostMapping("manageBonusSalaryRevisionOvertime")
     public ResponseEntity<ApiResponse> manageBonusSalaryRevisionOvertime(@RequestBody List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhoc) throws Exception {
-        String status = hikePromotionAndAdhocsService.saveHikePromotionData(hikeBonusSalaryAdhoc);
+        String status = hikePromotionAndAdhocsService.manageBonusSalaryOvertimeService(hikeBonusSalaryAdhoc);
         return ResponseEntity.ok(ApiResponse.Ok(status));
     }
 
     @PostMapping("manageReimbursementAdhocPaymentDeduction")
     public ResponseEntity<ApiResponse> manageReimbursementAdhocPaymentDeduction(@RequestBody List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhoc) throws Exception {
-        String status = hikePromotionAndAdhocsService.saveHikePromotionData(hikeBonusSalaryAdhoc);
+        String status = hikePromotionAndAdhocsService.manageReimbursementAdhocPaymentDeductionService(hikeBonusSalaryAdhoc);
         return ResponseEntity.ok(ApiResponse.Ok(status));
     }
 }
