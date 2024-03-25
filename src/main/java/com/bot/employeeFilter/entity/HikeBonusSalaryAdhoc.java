@@ -22,6 +22,10 @@ public class HikeBonusSalaryAdhoc {
     @JsonProperty("EmployeeId")
     long employeeId;
 
+    @Column(name = "ProcessStepId")
+    @JsonProperty("ProcessStepId")
+    int processStepId;
+
     @Column(name = "FinancialYear")
     @JsonProperty("FinancialYear")
     int financialYear;

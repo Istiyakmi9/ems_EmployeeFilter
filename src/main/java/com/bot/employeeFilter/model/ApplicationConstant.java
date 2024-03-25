@@ -17,4 +17,10 @@ public final class ApplicationConstant {
     public static final int Saved = 13;
     public static final int AutoPromoted = 14;
     public static final int FinalLevel = 1;
+    public static final int NewJoineeExits = 2;
+    public static final int BonusSalaryOvertime = 3;
+    public static final int ReimbursementAdhoc = 4;
+    public static final int SalariesHoldArrear = 5;
+    public static final int OverrideComponent = 6;
+
 }

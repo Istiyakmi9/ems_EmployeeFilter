@@ -10,4 +10,5 @@ public interface IHikePromotionAndAdhocsService {
     String manageBonusService(BonusShiftOvertime bonusShiftOvertime) throws  Exception;
     String manageNewJoineeExitsFinalSattlementService(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) throws Exception;
     String manageBonusSalaryOvertimeService(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) throws Exception;
+    String manageReimbursementAdhocPaymentDeductionService(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) throws Exception;
 }
