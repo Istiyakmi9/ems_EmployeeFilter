@@ -128,10 +128,21 @@ public class ProcessingPayrollRepository {
         dbParams.add(new DbParameters("_ForYear", forYear, Types.INTEGER));
 
         Map<String, Object> result = lowLevelExecution.executeProcedure("sp_employee_get_bonus_shift_overtime", dbParams);
-        List<BonusShiftOvertime> bonusShiftOvertimes = objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<BonusShiftOvertime>>() {
-        });
 
-        return bonusShiftOvertimes;
+        return objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<BonusShiftOvertime>>() {
+        });
+    }
+
+    public List<Employee> getSalaryHoldEmployeeService(int companyId, int forMonth, int forYear) throws Exception {
+        List<DbParameters> dbParams = new ArrayList<>();
+        dbParams.add(new DbParameters("_CompanyId", companyId, Types.INTEGER));
+        dbParams.add(new DbParameters("_ForMonth", forMonth, Types.INTEGER));
+        dbParams.add(new DbParameters("_ForYear", forYear, Types.INTEGER));
+
+        Map<String, Object> result = lowLevelExecution.executeProcedure("sp_employees_salary_on_hold", dbParams);
+
+        return objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<Employee>>() {
+        });
     }
 
     public List<ReimbursementAdhocDeduction> getReimbursementAdhocDeductionRepository(int companyId, int forMonth,

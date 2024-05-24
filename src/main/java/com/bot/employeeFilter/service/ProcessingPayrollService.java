@@ -99,12 +99,19 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
             throw new Exception("Invalid leave type id");
 
         if (!LeaveRequestDetail.getLeaveQuotaDetail().isEmpty()) {
-            List<LeaveTypeBrief> records = objectMapper.convertValue(LeaveRequestDetail.getLeaveQuotaDetail(), new TypeReference<List<LeaveTypeBrief>>() {});
-            if (records.size() > 0) {
-                LeaveTypeBrief item = records.stream().filter(x -> x.getLeavePlanTypeId() == leaveTypeId).findFirst().get();
-                item.setAvailableLeaves((int) (item.getAvailableLeaves() + leaveCount));
-                if (item.getAvailableLeaves() > item.getTotalLeaveQuota())
-                    item.setAvailableLeaves(item.getTotalLeaveQuota());
+            List<LeaveTypeBrief> records = objectMapper.convertValue(LeaveRequestDetail.getLeaveQuotaDetail(), new TypeReference<java.util.List<LeaveTypeBrief>>() {});
+            if (!records.isEmpty()) {
+                var result = records.stream().filter(x -> x.getLeavePlanTypeId() == leaveTypeId).findFirst();
+                if(result.isPresent()) {
+                    LeaveTypeBrief item = result.get();
+
+                    item.setAvailableLeaves((int) (item.getAvailableLeaves() + leaveCount));
+                    if (item.getAvailableLeaves() > item.getTotalLeaveQuota())
+                        item.setAvailableLeaves(item.getTotalLeaveQuota());
+                }
+                else {
+                    throw new Exception("Fail to get leave plans");
+                }
 
                 LeaveRequestDetail.setLeaveQuotaDetail(objectMapper.writeValueAsString(records));
             }
@@ -114,6 +121,11 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
     public List<BonusShiftOvertime> getBonusShiftOTService(int forMonth, int forYear) throws Exception {
         return processingPayrollRepository.getBonusShiftOTRepository(currentSession.getUserDetail().getCompanyId(),
                                                                         forMonth, forYear);
+    }
+
+    public List<Employee> getSalaryHoldEmployees(int forMonth, int forYear) throws Exception {
+        return processingPayrollRepository.getSalaryHoldEmployeeService(currentSession.getUserDetail().getCompanyId(),
+                forMonth, forYear);
     }
 
     public List<ReimbursementAdhocDeduction> getReimbursementAdhocDeductionService(int forMonth, int forYear) throws Exception {
