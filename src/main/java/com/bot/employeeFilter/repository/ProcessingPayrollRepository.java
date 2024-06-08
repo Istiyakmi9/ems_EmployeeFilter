@@ -58,10 +58,6 @@ public class ProcessingPayrollRepository {
     }
 
     public Optional<List<PayrollMonthlyDetail>> getPayrollProcessingDetailRepository(int year, int companyId) throws Exception {
-
-        if (year != LocalDateTime.now().getYear())
-            throw new Exception("Invalid year passed");
-
         List<DbParameters> dbParameters = new ArrayList<>();
         dbParameters.add(new DbParameters("_ForYear", year, Types.INTEGER));
         dbParameters.add(new DbParameters("_CompanyId", companyId, Types.INTEGER));
