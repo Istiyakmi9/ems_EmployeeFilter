@@ -10,7 +10,7 @@ import java.util.List;
 public interface IProcessingPayrollService {
     List<?> getLeaveAndLOPService(int year, int month) throws Exception;
     String leaveApprovalService(Leave requestDetail) throws Exception;
-    List<PayrollMonthlyDetail> getPayrollProcessingDetailService(int year) throws Exception;
+    List<PayrollMonthlyDetail> getPayrollProcessingDetailService(int month, int year) throws Exception;
     List<Attendance> getAttendanceByPage(FilterModel filterModel) throws Exception;
     List<Employee> getJoineeAndExitingEmployeesService() throws Exception;
     List<BonusShiftOvertime> getBonusShiftOTService(int forMonth, int forYear) throws Exception;
