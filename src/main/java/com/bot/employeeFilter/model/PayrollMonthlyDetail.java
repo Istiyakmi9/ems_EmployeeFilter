@@ -13,6 +13,8 @@ import java.util.Date;
 public class PayrollMonthlyDetail {
     @JsonProperty(value = "PayrollMonthlyDetailId")
     int payrollMonthlyDetailId;
+    @JsonProperty(value = "EmployeeCount")
+    int EmployeeCount;
     @JsonProperty(value = "ForYear")
     int forYear;
     @JsonProperty(value = "ForMonth")
@@ -21,6 +23,11 @@ public class PayrollMonthlyDetail {
     double totalPayableToEmployees;
     @JsonProperty(value = "TotalPFByEmployer")
     double totalPFByEmployer;
+    @JsonProperty(value = "TotalDeduction")
+    @Transient
+    double totalDeduction;
+    @JsonProperty(value = "TotalPFByEmployee")
+    double totalPFByEmployee;
     @JsonProperty(value = "TotalProfessionalTax")
     double totalProfessionalTax;
     @JsonProperty(value = "PayrollStatus")
@@ -42,4 +49,8 @@ public class PayrollMonthlyDetail {
     @JsonProperty(value = "TotalEmployees")
     @Transient
     int totalEmployees;
+    @JsonProperty(value = "ProcessOn")
+    @JsonFormat(pattern="yyyy-MM-dd")
+    @Transient
+    Date processOn;
 }

@@ -51,8 +51,14 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         return updateLeaveDetail(requestDetail, ApplicationConstant.Approved);
     }
 
-    public List<PayrollMonthlyDetail> getPayrollProcessingDetailService(int year) throws Exception {
-        Optional<List<PayrollMonthlyDetail>> payrollMonthlyDetail = processingPayrollRepository.getPayrollProcessingDetailRepository(year, currentSession.getUserDetail().getCompanyId());
+    public List<PayrollMonthlyDetail> getPayrollProcessingDetailService(int month, int year) throws Exception {
+        if (month == 0)
+            throw new Exception("Invalid month selected");
+
+        if (year == 0)
+            throw new Exception("Invalid year selected");
+
+        Optional<List<PayrollMonthlyDetail>> payrollMonthlyDetail = processingPayrollRepository.getPayrollProcessingDetailRepository(month, year, currentSession.getUserDetail().getCompanyId());
         payrollMonthlyDetail.orElseThrow(() -> new RuntimeException("No record found"));
         return payrollMonthlyDetail.get();
     }
