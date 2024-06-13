@@ -15,6 +15,8 @@ import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Repository
@@ -25,9 +27,16 @@ public class ProcessingPayrollRepository {
     ObjectMapper objectMapper;
 
     public List<?> getLeaveAndLOPRepository(int year, int month, int companyId) throws Exception {
+        // Create a LocalDateTime for the first day of the given month and year at midnight
+        LocalDateTime localDateTime = LocalDateTime.of(year, month, 1, 0, 0);
+
+        // Convert LocalDateTime to ZonedDateTime with UTC time zone
+        ZonedDateTime utcFromDate = localDateTime.atZone(ZoneOffset.UTC);
+        ZonedDateTime toDate = utcFromDate.plusMonths(1L).plusDays(-1L);
+
         List<DbParameters> dbParameters = new ArrayList<>();
-        dbParameters.add(new DbParameters("_Year", year, Types.INTEGER));
-        dbParameters.add(new DbParameters("_Month", month, Types.INTEGER));
+        dbParameters.add(new DbParameters("_FromDate", utcFromDate, Types.DATE));
+        dbParameters.add(new DbParameters("_ToDate", toDate, Types.DATE));
         dbParameters.add(new DbParameters("_CompanyId", companyId, Types.INTEGER));
         var dataSet = lowLevelExecution.executeProcedure("sp_leave_and_lop_get", dbParameters);
         var result = new ArrayList<>();
@@ -185,6 +194,34 @@ public class ProcessingPayrollRepository {
         dbParams.add(new DbParameters("_LeaveQuotaDetail", leaveRequestDetail.getLeaveQuotaDetail(), Types.VARCHAR));
 
         lowLevelExecution.executeProcedure("sp_employee_leave_request_InsUpdate", dbParams);
+    }
+
+    public List<SalaryRunConfigProcessing> getSalaryRunConfigRepository(SalaryRunConfigProcessing salaryRunConfigProcessing) throws Exception {
+        List<DbParameters> dbParams = new ArrayList<>();
+        dbParams.add(new DbParameters("_CompanyId", salaryRunConfigProcessing.getCompanyId(), Types.INTEGER));
+        dbParams.add(new DbParameters("_ForMonth", salaryRunConfigProcessing.getForMonth(), Types.INTEGER));
+        dbParams.add(new DbParameters("_ForYear", salaryRunConfigProcessing.getForYear(), Types.INTEGER));
+
+        Map<String, Object> result = lowLevelExecution.executeProcedure("sp_salary_run_config_processing_getby_month_year", dbParams);
+
+        return objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<SalaryRunConfigProcessing>>() {
+        });
+    }
+
+    public String updateSalaryRunConfigRepository(SalaryRunConfigProcessing salaryRunConfigProcessing) throws Exception {
+        List<DbParameters> dbParams = new ArrayList<>();
+        String status = "fail";
+        dbParams.add(new DbParameters("_CompanyId", salaryRunConfigProcessing.getCompanyId(), Types.INTEGER));
+        dbParams.add(new DbParameters("_ForMonth", salaryRunConfigProcessing.getForMonth(), Types.INTEGER));
+        dbParams.add(new DbParameters("_ForYear", salaryRunConfigProcessing.getForYear(), Types.INTEGER));
+        dbParams.add(new DbParameters("_SalaryRunConfigProcessingId", salaryRunConfigProcessing.getSalaryRunConfigProcessingId(), Types.INTEGER));
+        dbParams.add(new DbParameters("_ProcessingStatus", salaryRunConfigProcessing.getProcessingStatus(), Types.INTEGER));
+
+        var result = lowLevelExecution.executeProcedure("sp_salary_run_config_processing_insupd", dbParams);
+        if (result.containsKey("_ProcessingResult"))
+            status = result.get("_ProcessingResult").toString();
+
+        return  status;
     }
 }
 

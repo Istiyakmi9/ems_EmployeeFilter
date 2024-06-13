@@ -53,4 +53,7 @@ public class PayrollMonthlyDetail {
     @JsonFormat(pattern="yyyy-MM-dd")
     @Transient
     Date processOn;
+    @JsonProperty("ProcessingStatus")
+    @Transient
+    int processingStatus;
 }

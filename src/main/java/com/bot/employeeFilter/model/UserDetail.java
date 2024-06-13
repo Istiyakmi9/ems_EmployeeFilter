@@ -32,6 +32,9 @@ public class UserDetail {
     @JsonProperty("AdminId")
     int adminId;
 
+    @JsonProperty("FinancialYear")
+    int financialYear;
+
     public Long getEmployeeId() {
         return employeeId;
     }
@@ -142,6 +145,14 @@ public class UserDetail {
 
     public void setAdminId(int adminId) {
         this.adminId = adminId;
+    }
+
+    public int getFinancialYear() {
+        return financialYear;
+    }
+
+    public void setFinancialYear(int financialYear) {
+        this.financialYear = financialYear;
     }
 
     public UserDetail(Long employeeId, Long userId, int organizationId, int companyId, String firstName, String lastName, String fullName, String managerName, String mobile, String email, int roleId, String password, Long reportingManagerId, int adminId) {
