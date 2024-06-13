@@ -18,6 +18,10 @@ public class HikeBonusSalaryAdhoc {
     @JsonProperty("SalaryAdhocId")
     long salaryAdhocId;
 
+    @Column(name = "SalaryRunConfigProcessingId")
+    @JsonProperty("SalaryRunConfigProcessingId")
+    int salaryRunConfigProcessingId;
+
     @Column(name = "EmployeeId")
     @JsonProperty("EmployeeId")
     long employeeId;
@@ -117,4 +121,8 @@ public class HikeBonusSalaryAdhoc {
     @Column(name = "OTCalculatedOn")
     @JsonProperty("OTCalculatedOn")
     String oTCalculatedOn;
+
+    @JsonProperty("FullName")
+    @Transient
+    String fullName;
 }

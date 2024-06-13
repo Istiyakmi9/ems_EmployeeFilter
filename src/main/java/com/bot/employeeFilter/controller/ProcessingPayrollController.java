@@ -1,5 +1,7 @@
 package com.bot.employeeFilter.controller;
 
+import com.bot.employeeFilter.entity.HikeBonusSalaryAdhoc;
+import com.bot.employeeFilter.entity.SalaryRunConfigProcessing;
 import com.bot.employeeFilter.model.FilterModel;
 import com.bot.employeeFilter.entity.Leave;
 import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
@@ -53,5 +55,23 @@ public class ProcessingPayrollController {
     public ResponseEntity<ApiResponse> getReimbursementAdhocDeduction(@PathVariable int forMonth, @PathVariable int forYear) throws Exception {
         var result = iProcessingPayrollService.getReimbursementAdhocDeductionService(forMonth, forYear);
         return  ResponseEntity.ok(ApiResponse.Ok(result));
+    }
+
+    @RequestMapping(value = "holdSalaryDetail", method = RequestMethod.POST)
+    public  ResponseEntity<ApiResponse> holdSalaryDetail(@RequestBody HikeBonusSalaryAdhoc hikeBonusSalaryAdhoc) throws Exception {
+        var result = iProcessingPayrollService.holdSalaryDetailService(hikeBonusSalaryAdhoc);
+        return ResponseEntity.ok(ApiResponse.Ok(result));
+    }
+
+    @RequestMapping(value = "filterHikeBonusSalaryAdhoc", method = RequestMethod.POST)
+    public  ResponseEntity<ApiResponse> filterHikeBonusSalaryAdhoc(@RequestBody FilterModel filterModel) throws Exception {
+        var result = iProcessingPayrollService.filterHikeBonusSalaryAdhocService(filterModel);
+        return ResponseEntity.ok(ApiResponse.Ok(result));
+    }
+
+    @RequestMapping(value = "finalizeSalaryRunConfig", method = RequestMethod.POST)
+    public  ResponseEntity<ApiResponse> finalizeSalaryRunConfig(@RequestBody SalaryRunConfigProcessing salaryRunConfigProcessing) throws Exception {
+        var result = iProcessingPayrollService.finalizeSalaryRunConfigService(salaryRunConfigProcessing);
+        return ResponseEntity.ok(ApiResponse.Ok(result));
     }
 }

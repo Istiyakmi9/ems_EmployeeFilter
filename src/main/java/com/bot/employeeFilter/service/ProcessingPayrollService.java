@@ -4,6 +4,7 @@ import com.bot.employeeFilter.entity.*;
 import com.bot.employeeFilter.model.FilterModel;
 import com.bot.employeeFilter.interfaces.IProcessingPayrollService;
 import com.bot.employeeFilter.model.*;
+import com.bot.employeeFilter.repository.HikePromotionAndAdhocsRepository;
 import com.bot.employeeFilter.repository.ProcessingPayrollRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,8 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
     ProcessingPayrollRepository processingPayrollRepository;
     @Autowired
     CurrentSession currentSession;
+    @Autowired
+    HikePromotionAndAdhocsRepository hikePromotionAndAdhocsRepository;
     @Override
     public List<?> getLeaveAndLOPService(int year, int month) throws Exception {
         if (year == 0)
@@ -137,5 +140,58 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
     public List<ReimbursementAdhocDeduction> getReimbursementAdhocDeductionService(int forMonth, int forYear) throws Exception {
         return processingPayrollRepository.getReimbursementAdhocDeductionRepository(currentSession.getUserDetail().getCompanyId(),
                                                                                     forMonth, forYear);
+    }
+
+    public boolean holdSalaryDetailService(HikeBonusSalaryAdhoc hikeBonusSalaryAdhoc) throws Exception {
+        try {
+            if (hikeBonusSalaryAdhoc.getEmployeeId() == 0)
+                throw new Exception("Invalid employee selected");
+
+            if (hikeBonusSalaryAdhoc.getForMonth() == 0)
+                throw new Exception("Month is invalid");
+
+            if (hikeBonusSalaryAdhoc.getForYear() == 0)
+                throw new Exception("Year is invalid");
+
+            FilterModel filterModel = new FilterModel();
+            var searchString = "1=1 and IsSalaryOnHold = true and ForMonth=" + hikeBonusSalaryAdhoc.getForMonth() + " and ForYear=" + hikeBonusSalaryAdhoc.getForYear() + " and EmployeeId = " + hikeBonusSalaryAdhoc.getEmployeeId();
+            filterModel.setSearchString(searchString);
+            var existSalaryOnHoldData = hikePromotionAndAdhocsRepository.filterHikeBonusSalaryAdhocRepository(filterModel);
+            if (existSalaryOnHoldData.size() > 0) {
+                var existingRecord = existSalaryOnHoldData.get(0);
+                hikeBonusSalaryAdhoc.setSalaryAdhocId(existingRecord.getSalaryAdhocId());
+            }
+            hikeBonusSalaryAdhoc.setFinancialYear(currentSession.getUserDetail().getFinancialYear());
+            hikeBonusSalaryAdhoc.setOrganizationId(currentSession.getUserDetail().getOrganizationId());
+            hikeBonusSalaryAdhoc.setCompanyId(currentSession.getUserDetail().getCompanyId());
+            hikeBonusSalaryAdhoc.setSalaryOnHold(true);
+            hikeBonusSalaryAdhoc.setActive(true);
+            hikeBonusSalaryAdhoc.setStatus(ApplicationConstant.Approved);
+            hikeBonusSalaryAdhoc.setProgressState(ApplicationConstant.Approved);
+            return hikePromotionAndAdhocsRepository.addHikeBonusAdhocRepository(hikeBonusSalaryAdhoc);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public List<HikeBonusSalaryAdhoc> filterHikeBonusSalaryAdhocService(FilterModel filterModel) throws Exception {
+        return hikePromotionAndAdhocsRepository.filterHikeBonusSalaryAdhocRepository(filterModel);
+    }
+
+    public String finalizeSalaryRunConfigService(SalaryRunConfigProcessing salaryRunConfigProcessing) throws Exception {
+        if (salaryRunConfigProcessing.getForMonth() == 0)
+            throw new Exception("Invalid month selected");
+
+        if (salaryRunConfigProcessing.getForYear() == 0)
+            throw new Exception("Invalid year selected");
+
+        salaryRunConfigProcessing.setCompanyId(currentSession.getUserDetail().getCompanyId());
+        var processingConfigData = processingPayrollRepository.getSalaryRunConfigRepository(salaryRunConfigProcessing);
+        if (processingConfigData.size() == 0)
+            throw new Exception("Processing config record not found");
+
+        var existProcessingRecord = processingConfigData.get(0);
+        existProcessingRecord.setProcessingStatus(ApplicationConstant.Completed);
+        return processingPayrollRepository.updateSalaryRunConfigRepository(existProcessingRecord);
     }
 }

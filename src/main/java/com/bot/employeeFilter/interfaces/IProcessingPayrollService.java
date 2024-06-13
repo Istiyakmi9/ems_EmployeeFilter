@@ -15,4 +15,7 @@ public interface IProcessingPayrollService {
     List<Employee> getJoineeAndExitingEmployeesService() throws Exception;
     List<BonusShiftOvertime> getBonusShiftOTService(int forMonth, int forYear) throws Exception;
     List<ReimbursementAdhocDeduction> getReimbursementAdhocDeductionService(int forMonth, int forYear) throws Exception;
+    boolean holdSalaryDetailService(HikeBonusSalaryAdhoc hikeBonusSalaryAdhoc) throws Exception;
+    List<HikeBonusSalaryAdhoc> filterHikeBonusSalaryAdhocService(FilterModel filterModel) throws Exception;
+    String finalizeSalaryRunConfigService(SalaryRunConfigProcessing salaryRunConfigProcessing) throws Exception;
 }
