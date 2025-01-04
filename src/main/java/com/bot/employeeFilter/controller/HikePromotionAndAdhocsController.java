@@ -27,9 +27,9 @@ public class HikePromotionAndAdhocsController {
     }
 
     @PostMapping("manageBonus")
-    public ResponseEntity<ApiResponse> manageBonus(@RequestBody BonusShiftOvertime hikeBonusSalaryAdhoc) throws Exception {
-        String status = hikePromotionAndAdhocsService.manageBonusService(hikeBonusSalaryAdhoc);
-        return ResponseEntity.ok(ApiResponse.Ok(status));
+    public ResponseEntity<ApiResponse> manageBonus(@RequestBody List<BonusShiftOvertime> hikeBonusSalaryAdhoc) throws Exception {
+        var result = hikePromotionAndAdhocsService.manageBonusService(hikeBonusSalaryAdhoc);
+        return ResponseEntity.ok(ApiResponse.Ok(result));
     }
 
     @PostMapping("manageNewJoineeExitsFinalSattlement")

@@ -56,4 +56,19 @@ public class PayrollMonthlyDetail {
     @JsonProperty("ProcessingStatus")
     @Transient
     int processingStatus;
+    @JsonProperty("State")
+    @Transient
+    String state;
+    @JsonProperty("TotalESIByEmployee")
+    @Transient
+    double totalESIByEmployee;
+    @JsonProperty("TotalESIByEmployer")
+    @Transient
+    double totalESIByEmployer;
+    @JsonProperty("TotalTDSEmployees")
+    @Transient
+    int totalTDSEmployees;
+    @JsonProperty("TotalPTaxEmployees")
+    @Transient
+    int totalPTaxEmployees;
 }

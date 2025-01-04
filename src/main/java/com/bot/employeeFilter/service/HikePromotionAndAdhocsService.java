@@ -78,20 +78,25 @@ public class HikePromotionAndAdhocsService implements IHikePromotionAndAdhocsSer
         }
     }
 
-    public String manageBonusService(BonusShiftOvertime bonusShiftOvertime) throws Exception {
-        validateBonusShiftOvertime(bonusShiftOvertime);
+    public List<BonusShiftOvertime> manageBonusService(List<BonusShiftOvertime> bonusShiftOvertimes) throws Exception {
         java.util.Date utilDate = new java.util.Date();
         var date = new java.sql.Timestamp(utilDate.getTime());
-        bonusShiftOvertime.setCompanyId(currentSession.getUserDetail().getCompanyId());
-        bonusShiftOvertime.setOrganizationId(currentSession.getUserDetail().getOrganizationId());
-        bonusShiftOvertime.setUpdatedBy(currentSession.getUserDetail().getUserId());
-        bonusShiftOvertime.setUpdatedOn(date);
-        boolean flag = hikePromotionAndAdhocsRepository.manageBonusShiftOvertimeRepository(bonusShiftOvertime);
-        if(!flag) {
-            return "fail";
+        boolean flag = false;
+        for (int i = 0; i < bonusShiftOvertimes.size(); i++) {
+            validateBonusShiftOvertime(bonusShiftOvertimes.get(i));
+
+            bonusShiftOvertimes.get(i).setCompanyId(currentSession.getUserDetail().getCompanyId());
+            bonusShiftOvertimes.get(i).setOrganizationId(currentSession.getUserDetail().getOrganizationId());
+            bonusShiftOvertimes.get(i).setUpdatedBy(currentSession.getUserDetail().getUserId());
+            bonusShiftOvertimes.get(i).setUpdatedOn(date);
+            flag = hikePromotionAndAdhocsRepository.manageBonusShiftOvertimeRepository(bonusShiftOvertimes.get(i));
+
+            if (!flag)
+                throw new Exception("Fail to insert bonus");
         }
 
-        return "updated";
+        return processingPayrollRepository.getBonusShiftOTRepository(currentSession.getUserDetail().getCompanyId(),
+                bonusShiftOvertimes.get(0).getForMonth(), bonusShiftOvertimes.get(0).getForYear());
     }
 
     public String manageNewJoineeExitsFinalSattlementService(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) throws Exception {
