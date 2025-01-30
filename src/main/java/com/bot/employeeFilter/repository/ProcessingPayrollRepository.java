@@ -42,11 +42,11 @@ public class ProcessingPayrollRepository {
         var result = new ArrayList<>();
         List<LeaveNotification> leaves = objectMapper.convertValue(dataSet.get("#result-set-1"), new TypeReference<List<LeaveNotification>>() {});
         if (leaves.size() > 0) {
-            int enddate =  YearMonth.of(year, month-1).atEndOfMonth().getDayOfMonth();
+            int enddate =  YearMonth.of(year, (month-1 == 0) ? 12 : (month-1)).atEndOfMonth().getDayOfMonth();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");
-            String date = year +"-"+ enddate + "-" + (month-1);
+            String date = year +"-"+ enddate + "-" + ((month-1 == 0) ? 12 : (month-1));
             Date startDate = formatter.parse(date);
-            date = year +"-"+ 1 + "-" + (month+1);
+            date = year +"-"+ 1 + "-" + (month == 12 ? 1 : (month+1));
             Date endDate = formatter.parse(date);
             leaves = leaves.stream().filter(x -> (x.getFromDate().after(startDate) && x.getToDate().before(endDate))
                     || (x.getToDate().after(startDate) && x.getToDate().before(endDate))
