@@ -115,7 +115,7 @@ public class HikePromotionAndAdhocsService implements IHikePromotionAndAdhocsSer
         for (HikeBonusSalaryAdhoc hikeBonusSalaryAdhoc : hikeBonusSalaryAdhocs) {
             hikeBonusSalaryAdhoc.setCompanyId(currentSession.getUserDetail().getCompanyId());
             hikeBonusSalaryAdhoc.setOrganizationId(currentSession.getUserDetail().getOrganizationId());
-            hikeBonusSalaryAdhoc.setStatus(ApplicationConstant.Pending);
+            hikeBonusSalaryAdhoc.setStatus(ApplicationConstant.Approved);
             hikeBonusSalaryAdhoc.setProcessStepId(ApplicationConstant.NewJoineeExits);
 
             if (hikeBonusSalaryAdhoc.getPaymentActionType() == null || hikeBonusSalaryAdhoc.getPaymentActionType().equals(""))
