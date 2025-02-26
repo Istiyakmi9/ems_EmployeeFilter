@@ -71,4 +71,10 @@ public class PayrollMonthlyDetail {
     @JsonProperty("TotalPTaxEmployees")
     @Transient
     int totalPTaxEmployees;
+    @JsonProperty("TotalProcessed")
+    @Transient
+    int totalProcessed;
+    @JsonProperty("TotalOnHold")
+    @Transient
+    int totalOnHold;
 }
