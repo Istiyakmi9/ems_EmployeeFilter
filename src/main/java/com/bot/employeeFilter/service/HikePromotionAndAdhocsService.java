@@ -135,6 +135,10 @@ public class HikePromotionAndAdhocsService implements IHikePromotionAndAdhocsSer
     public String manageBonusSalaryOvertimeService(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) throws Exception {
         validateBonusSalaryOvertime(hikeBonusSalaryAdhocs);
         boolean flag = false;
+        hikeBonusSalaryAdhocs.forEach(x -> {
+            x.setStatus(ApplicationConstant.Approved);
+            x.setFinancialYear(currentSession.getUserDetail().getFinancialYear());
+        });
 
         var overtimeDetail = hikeBonusSalaryAdhocs.stream().filter(x -> !x.isCompOff() && x.isOvertime()).toList();
         if (overtimeDetail.size() > 0)
