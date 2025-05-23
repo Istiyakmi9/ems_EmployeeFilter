@@ -74,4 +74,16 @@ public class ProcessingPayrollController {
         var result = iProcessingPayrollService.finalizeSalaryRunConfigService(salaryRunConfigProcessing);
         return ResponseEntity.ok(ApiResponse.Ok(result));
     }
+
+    @RequestMapping(value = "getBonus", method = RequestMethod.POST)
+    public ResponseEntity<ApiResponse> getBonus(@RequestBody FilterModel filterModel) throws Exception {
+        var result = iProcessingPayrollService.getBonusService(filterModel);
+        return  ResponseEntity.ok(ApiResponse.Ok(result));
+    }
+
+    @RequestMapping(value = "getOvertime", method = RequestMethod.POST)
+    public ResponseEntity<ApiResponse> getOvertime(@RequestBody FilterModel filterModel) throws Exception {
+        var result = iProcessingPayrollService.getOvertimeService(filterModel);
+        return  ResponseEntity.ok(ApiResponse.Ok(result));
+    }
 }

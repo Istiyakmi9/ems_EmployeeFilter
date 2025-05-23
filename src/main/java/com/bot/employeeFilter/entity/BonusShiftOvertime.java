@@ -115,4 +115,12 @@ public class BonusShiftOvertime {
     @Transient
     @JsonProperty("SalaryAdhocId")
     private long salaryAdhocId;
+
+    @Transient
+    @JsonProperty("Total")
+    private int total;
+
+    @Transient
+    @JsonProperty("RowIndex")
+    private int rowIndex;
 }

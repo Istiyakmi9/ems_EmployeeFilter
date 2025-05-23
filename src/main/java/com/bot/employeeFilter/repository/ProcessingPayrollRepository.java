@@ -223,5 +223,18 @@ public class ProcessingPayrollRepository {
 
         return  status;
     }
+
+    public List<BonusShiftOvertime> getBonusRepository(FilterModel filterModel) throws Exception {
+        List<DbParameters> dbParams = new ArrayList<>();
+        dbParams.add(new DbParameters("_SearchString", filterModel.getSearchString(), Types.VARCHAR));
+        dbParams.add(new DbParameters("_SortBy", filterModel.getSortBy(), Types.VARCHAR));
+        dbParams.add(new DbParameters("_PageIndex", filterModel.getPageIndex(), Types.INTEGER));
+        dbParams.add(new DbParameters("_PageSize", filterModel.getPageSize(), Types.INTEGER));
+
+        Map<String, Object> result = lowLevelExecution.executeProcedure("sp_employee_get_bonus_shift_overtime_filter", dbParams);
+
+        return objectMapper.convertValue(result.get("#result-set-1"), new TypeReference<List<BonusShiftOvertime>>() {
+        });
+    }
 }
 
