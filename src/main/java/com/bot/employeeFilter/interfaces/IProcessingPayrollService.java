@@ -18,4 +18,6 @@ public interface IProcessingPayrollService {
     boolean holdSalaryDetailService(HikeBonusSalaryAdhoc hikeBonusSalaryAdhoc) throws Exception;
     List<HikeBonusSalaryAdhoc> filterHikeBonusSalaryAdhocService(FilterModel filterModel) throws Exception;
     String finalizeSalaryRunConfigService(SalaryRunConfigProcessing salaryRunConfigProcessing) throws Exception;
+    List<BonusShiftOvertime> getBonusService(FilterModel filterModel) throws Exception;
+    List<BonusShiftOvertime> getOvertimeService(FilterModel filterModel) throws Exception;
 }

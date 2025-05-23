@@ -194,4 +194,14 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         existProcessingRecord.setProcessingStatus(ApplicationConstant.Completed);
         return processingPayrollRepository.updateSalaryRunConfigRepository(existProcessingRecord);
     }
+
+    public List<BonusShiftOvertime> getBonusService(FilterModel filterModel) throws Exception {
+        filterModel.setSearchString(filterModel.getSearchString() + " and b.IsBonus = true");
+        return processingPayrollRepository.getBonusRepository(filterModel);
+    }
+
+    public List<BonusShiftOvertime> getOvertimeService(FilterModel filterModel) throws Exception {
+        filterModel.setSearchString(filterModel.getSearchString() + " and b.IsOvertime = true");
+        return processingPayrollRepository.getBonusRepository(filterModel);
+    }
 }
