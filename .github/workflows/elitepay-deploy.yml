@@ -10,9 +10,9 @@ name: Java CI pipeline for Employee Performance service
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ "elitepay-prod" ]
+#  pull_request:
+#    branches: [ "elitepay-prod" ]
 
 jobs:
   build:
@@ -34,7 +34,7 @@ jobs:
       name: Build & push Docker image
       with:
         image: istiyaqmi9/ems_employeeperfilter
-        tags: latest
+        tags: elitepay
         registry: docker.io
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
