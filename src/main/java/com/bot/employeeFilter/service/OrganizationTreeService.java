@@ -66,7 +66,7 @@ public class OrganizationTreeService implements IOrganizationTreeService {
             throw new Exception((ex.getMessage()));
         }
 
-        return getOrganizationHierarchyService(currentSession.getUserDetail().getCompanyId());
+        return getOrganizationHierarchyService(currentSession.getCompanyId());
     }
 
     public List<OrgHierarchyModel> getOrgTreeByRoleService(int companyId, int roleId) throws Exception {
@@ -79,7 +79,7 @@ public class OrganizationTreeService implements IOrganizationTreeService {
 
     public List<OrgHierarchyModel> deleteOrganizationHierarchyService(DeleteOrgTreeNode deleteOrgTreeNode) throws Exception {
         try {
-            List<OrgHierarchyModel> orgTree = new ArrayList<>(getOrganizationHierarchyService(currentSession.getUserDetail().getCompanyId()));
+            List<OrgHierarchyModel> orgTree = new ArrayList<>(getOrganizationHierarchyService(currentSession.getCompanyId()));
             if (!orgTree.isEmpty() && orgTree.size() > 0) {
                 if (deleteOrgTreeNode.isDeleteAllNode()) {
                     List<OrgHierarchyModel> removeNode = orgTree.stream().filter(x -> x.getRoleId() == deleteOrgTreeNode.getRoleId() ||
@@ -107,7 +107,7 @@ public class OrganizationTreeService implements IOrganizationTreeService {
             throw new Exception(ex.getMessage());
         }
 
-        return getOrganizationHierarchyService(currentSession.getUserDetail().getCompanyId());
+        return getOrganizationHierarchyService(currentSession.getCompanyId());
     }
 
     private List<OrgHierarchyModel> buildFilteredTree(List<OrgHierarchyModel> itemTree, List<OrgHierarchyModel> newTree, int roleId) throws Exception {
