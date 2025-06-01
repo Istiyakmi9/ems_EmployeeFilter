@@ -35,7 +35,7 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         if (month == 0)
             throw new Exception("Invalid month selected. Please select a valid month");
 
-        return  processingPayrollRepository.getLeaveAndLOPRepository(year, month, currentSession.getUserDetail().getCompanyId());
+        return  processingPayrollRepository.getLeaveAndLOPRepository(year, month, currentSession.getCompanyId());
     }
 
     public List<Attendance> getAttendanceByPage(FilterModel filterModel) throws Exception {
@@ -47,7 +47,7 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
     }
 
     public List<Employee> getJoineeAndExitingEmployeesService() throws Exception {
-        return processingPayrollRepository.getJoineeAndExitingEmployeesRepository(currentSession.getUserDetail().getCompanyId());
+        return processingPayrollRepository.getJoineeAndExitingEmployeesRepository(currentSession.getCompanyId());
     }
 
     public String leaveApprovalService(Leave requestDetail) throws Exception {
@@ -61,7 +61,7 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         if (year == 0)
             throw new Exception("Invalid year selected");
 
-        Optional<List<PayrollMonthlyDetail>> payrollMonthlyDetail = processingPayrollRepository.getPayrollProcessingDetailRepository(month, year, currentSession.getUserDetail().getCompanyId());
+        Optional<List<PayrollMonthlyDetail>> payrollMonthlyDetail = processingPayrollRepository.getPayrollProcessingDetailRepository(month, year, currentSession.getCompanyId());
         payrollMonthlyDetail.orElseThrow(() -> new RuntimeException("No record found"));
         return payrollMonthlyDetail.get();
     }
@@ -128,17 +128,17 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
     }
 
     public List<BonusShiftOvertime> getBonusShiftOTService(int forMonth, int forYear) throws Exception {
-        return processingPayrollRepository.getBonusShiftOTRepository(currentSession.getUserDetail().getCompanyId(),
+        return processingPayrollRepository.getBonusShiftOTRepository(currentSession.getCompanyId(),
                                                                         forMonth, forYear);
     }
 
     public List<Employee> getSalaryHoldEmployees(int forMonth, int forYear) throws Exception {
-        return processingPayrollRepository.getSalaryHoldEmployeeService(currentSession.getUserDetail().getCompanyId(),
+        return processingPayrollRepository.getSalaryHoldEmployeeService(currentSession.getCompanyId(),
                 forMonth, forYear);
     }
 
     public List<ReimbursementAdhocDeduction> getReimbursementAdhocDeductionService(int forMonth, int forYear) throws Exception {
-        return processingPayrollRepository.getReimbursementAdhocDeductionRepository(currentSession.getUserDetail().getCompanyId(),
+        return processingPayrollRepository.getReimbursementAdhocDeductionRepository(currentSession.getCompanyId(),
                                                                                     forMonth, forYear);
     }
 
@@ -161,9 +161,9 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
                 var existingRecord = existSalaryOnHoldData.get(0);
                 hikeBonusSalaryAdhoc.setSalaryAdhocId(existingRecord.getSalaryAdhocId());
             }
-            hikeBonusSalaryAdhoc.setFinancialYear(currentSession.getUserDetail().getFinancialYear());
-            hikeBonusSalaryAdhoc.setOrganizationId(currentSession.getUserDetail().getOrganizationId());
-            hikeBonusSalaryAdhoc.setCompanyId(currentSession.getUserDetail().getCompanyId());
+            hikeBonusSalaryAdhoc.setFinancialYear(currentSession.getFinancialStartYear());
+            hikeBonusSalaryAdhoc.setOrganizationId(currentSession.getOrganizationId());
+            hikeBonusSalaryAdhoc.setCompanyId(currentSession.getCompanyId());
             hikeBonusSalaryAdhoc.setSalaryOnHold(true);
             hikeBonusSalaryAdhoc.setActive(true);
             hikeBonusSalaryAdhoc.setStatus(ApplicationConstant.Approved);
@@ -185,7 +185,7 @@ public class ProcessingPayrollService implements IProcessingPayrollService {
         if (salaryRunConfigProcessing.getForYear() == 0)
             throw new Exception("Invalid year selected");
 
-        salaryRunConfigProcessing.setCompanyId(currentSession.getUserDetail().getCompanyId());
+        salaryRunConfigProcessing.setCompanyId(currentSession.getCompanyId());
         var processingConfigData = processingPayrollRepository.getSalaryRunConfigRepository(salaryRunConfigProcessing);
         if (processingConfigData.size() == 0)
             throw new Exception("Processing config record not found");
