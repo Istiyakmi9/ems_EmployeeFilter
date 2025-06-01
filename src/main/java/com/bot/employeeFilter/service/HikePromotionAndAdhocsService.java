@@ -33,8 +33,8 @@ public class HikePromotionAndAdhocsService implements IHikePromotionAndAdhocsSer
     ObjectMapper objectMapper;
     public String saveHikePromotionData(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) throws Exception {
         hikeBonusSalaryAdhocs.forEach(x -> {
-            x.setCompanyId(currentSession.getUserDetail().getCompanyId());
-            x.setOrganizationId(currentSession.getUserDetail().getOrganizationId());
+            x.setCompanyId(currentSession.getCompanyId());
+            x.setOrganizationId(currentSession.getOrganizationId());
             x.setStatus(ApplicationConstant.Pending);
             if (x.getPaymentActionType() != null && !x.getPaymentActionType().equals("")) {
                 if (x.getPaymentActionType().equalsIgnoreCase("hold salary processing this month")
@@ -85,9 +85,9 @@ public class HikePromotionAndAdhocsService implements IHikePromotionAndAdhocsSer
         for (int i = 0; i < bonusShiftOvertimes.size(); i++) {
             validateBonusShiftOvertime(bonusShiftOvertimes.get(i));
 
-            bonusShiftOvertimes.get(i).setCompanyId(currentSession.getUserDetail().getCompanyId());
-            bonusShiftOvertimes.get(i).setOrganizationId(currentSession.getUserDetail().getOrganizationId());
-            bonusShiftOvertimes.get(i).setUpdatedBy(currentSession.getUserDetail().getUserId());
+            bonusShiftOvertimes.get(i).setCompanyId(currentSession.getCompanyId());
+            bonusShiftOvertimes.get(i).setOrganizationId(currentSession.getOrganizationId());
+            bonusShiftOvertimes.get(i).setUpdatedBy(currentSession.getUserId());
             bonusShiftOvertimes.get(i).setUpdatedOn(date);
             flag = hikePromotionAndAdhocsRepository.manageBonusShiftOvertimeRepository(bonusShiftOvertimes.get(i));
 
@@ -95,7 +95,7 @@ public class HikePromotionAndAdhocsService implements IHikePromotionAndAdhocsSer
                 throw new Exception("Fail to insert bonus");
         }
 
-        return processingPayrollRepository.getBonusShiftOTRepository(currentSession.getUserDetail().getCompanyId(),
+        return processingPayrollRepository.getBonusShiftOTRepository(currentSession.getCompanyId(),
                 bonusShiftOvertimes.get(0).getForMonth(), bonusShiftOvertimes.get(0).getForYear());
     }
 
@@ -113,8 +113,8 @@ public class HikePromotionAndAdhocsService implements IHikePromotionAndAdhocsSer
 
     private void validateNewJoineeExitsFinalSattlement(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) throws Exception {
         for (HikeBonusSalaryAdhoc hikeBonusSalaryAdhoc : hikeBonusSalaryAdhocs) {
-            hikeBonusSalaryAdhoc.setCompanyId(currentSession.getUserDetail().getCompanyId());
-            hikeBonusSalaryAdhoc.setOrganizationId(currentSession.getUserDetail().getOrganizationId());
+            hikeBonusSalaryAdhoc.setCompanyId(currentSession.getCompanyId());
+            hikeBonusSalaryAdhoc.setOrganizationId(currentSession.getOrganizationId());
             hikeBonusSalaryAdhoc.setStatus(ApplicationConstant.Approved);
             hikeBonusSalaryAdhoc.setProcessStepId(ApplicationConstant.NewJoineeExits);
 
@@ -137,7 +137,7 @@ public class HikePromotionAndAdhocsService implements IHikePromotionAndAdhocsSer
         boolean flag = false;
         hikeBonusSalaryAdhocs.forEach(x -> {
             x.setStatus(ApplicationConstant.Approved);
-            x.setFinancialYear(currentSession.getUserDetail().getFinancialYear());
+            x.setFinancialYear(currentSession.getFinancialStartYear());
         });
 
         var overtimeDetail = hikeBonusSalaryAdhocs.stream().filter(x -> !x.isCompOff() && x.isOvertime()).toList();
@@ -176,8 +176,8 @@ public class HikePromotionAndAdhocsService implements IHikePromotionAndAdhocsSer
 
     private void validateBonusSalaryOvertime(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) throws Exception {
         for (HikeBonusSalaryAdhoc hikeBonusSalaryAdhoc : hikeBonusSalaryAdhocs) {
-            hikeBonusSalaryAdhoc.setCompanyId(currentSession.getUserDetail().getCompanyId());
-            hikeBonusSalaryAdhoc.setOrganizationId(currentSession.getUserDetail().getOrganizationId());
+            hikeBonusSalaryAdhoc.setCompanyId(currentSession.getCompanyId());
+            hikeBonusSalaryAdhoc.setOrganizationId(currentSession.getOrganizationId());
             hikeBonusSalaryAdhoc.setStatus(ApplicationConstant.Pending);
             hikeBonusSalaryAdhoc.setProcessStepId(ApplicationConstant.BonusSalaryOvertime);
             if (hikeBonusSalaryAdhoc.getPaymentActionType() == null || hikeBonusSalaryAdhoc.getPaymentActionType().equals(""))
@@ -309,8 +309,8 @@ public class HikePromotionAndAdhocsService implements IHikePromotionAndAdhocsSer
 
     private void validateReimbursementAdhocPaymentDeduction(List<HikeBonusSalaryAdhoc> hikeBonusSalaryAdhocs) throws Exception {
         for (HikeBonusSalaryAdhoc hikeBonusSalaryAdhoc : hikeBonusSalaryAdhocs) {
-            hikeBonusSalaryAdhoc.setCompanyId(currentSession.getUserDetail().getCompanyId());
-            hikeBonusSalaryAdhoc.setOrganizationId(currentSession.getUserDetail().getOrganizationId());
+            hikeBonusSalaryAdhoc.setCompanyId(currentSession.getCompanyId());
+            hikeBonusSalaryAdhoc.setOrganizationId(currentSession.getOrganizationId());
             hikeBonusSalaryAdhoc.setStatus(ApplicationConstant.Pending);
             hikeBonusSalaryAdhoc.setProcessStepId(ApplicationConstant.ReimbursementAdhoc);
 

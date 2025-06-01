@@ -35,12 +35,12 @@ public class EmployeeCompoffService implements IEmployeeCompoffService {
         long employeeCompoffOvertimeId = dbManager.nextLongPrimaryKey(EmployeeCompoff.class);
 
         employeeCompoff.setEmployeeCompoffOvertimeId(employeeCompoffOvertimeId);
-        employeeCompoff.setReportingManagerId(currentSession.getUserDetail().getReportingManagerId());
+        employeeCompoff.setReportingManagerId(currentSession.getReportingManagerId());
         employeeCompoff.setStatus(ApplicationConstant.Pending);
-        employeeCompoff.setEmployeeId(currentSession.getUserDetail().getUserId());
-        employeeCompoff.setUpdatedBy(currentSession.getUserDetail().getUserId());
+        employeeCompoff.setEmployeeId(currentSession.getUserId());
+        employeeCompoff.setUpdatedBy(currentSession.getUserId());
         employeeCompoff.setUpdatedOn(date);
-        employeeCompoff.setCreatedBy(currentSession.getUserDetail().getUserId());
+        employeeCompoff.setCreatedBy(currentSession.getUserId());
         employeeCompoff.setCreatedOn(date);
 
         dbManager.save(employeeCompoff);
@@ -67,7 +67,7 @@ public class EmployeeCompoffService implements IEmployeeCompoffService {
 
         var employeeCompOff = changeCompoffStatus(employeeCompoffOvertimeId, ApplicationConstant.Approved);
 
-        var employeeLeaveRequest = getEmployeeLeaveRequestRepository(employeeCompOff.getEmployeeId(), currentSession.getUserDetail().getFinancialYear());
+        var employeeLeaveRequest = getEmployeeLeaveRequestRepository(employeeCompOff.getEmployeeId(), currentSession.getFinancialStartYear());
         if (employeeLeaveRequest == null || Objects.equals(employeeLeaveRequest.getLeaveQuotaDetail(), "[]"))
             throw new Exception("Leave quota not found. Please contact to admin");
 
@@ -152,7 +152,7 @@ public class EmployeeCompoffService implements IEmployeeCompoffService {
     }
 
     public List<EmployeeCompoff> getEmployeeCompoffFilterService(@RequestBody FilterModel filterModel) throws Exception {
-        filterModel.setSearchString(filterModel.getSearchString() + " and e.ReportingManagerId = " + currentSession.getUserDetail().getUserId());
+        filterModel.setSearchString(filterModel.getSearchString() + " and e.ReportingManagerId = " + currentSession.getUserId());
 
         Map<String, Object> result = lowLevelExecution.executeProcedure("sp_employee_compoff_filter", Arrays.asList(
                 new DbParameters("_SearchString", filterModel.getSearchString(), Types.VARCHAR),
